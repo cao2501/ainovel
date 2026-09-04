@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Front-End Checklist: Character Encoding & Viewport -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Aitory — Nền Tảng Sáng Tác Tiểu Thuyết Đa Agent Toàn Cầu</title>
+  
+  <!-- Front-End Checklist: SEO & Discoverability -->
+  <meta name="description" content="Aitory là nền tảng SaaS sáng tác tiểu thuyết thương mại hàng đầu, tích hợp hệ thống 5 AI Agents chuyên sâu: Architect, Writer, 7D Editor, Arbiter và Coordinator. Bản quyền tác giả 100%.">
+  <meta name="keywords" content="Aitory, viết truyện AI, sáng tác tiểu thuyết, AI Novel Studio, tiên hiệp, kiếm hiệp, đô thị, ngôn tình, khoa huyễn">
+  <meta name="author" content="Aitory Novel Studio">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#070a12">
+  <link rel="canonical" href="https://ainovel.id.vn/">
+
+  <!-- Front-End Checklist: Social Metadata (Open Graph & Twitter) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Aitory Novel Studio">
+  <meta property="og:url" content="https://ainovel.id.vn/">
+  <meta property="og:title" content="Aitory — Khởi Sinh Vũ Trụ Văn Học Bằng Trí Tuệ Đa Agent">
+  <meta property="og:description" content="Biến ý tưởng sơ khai thành trường thiên tiểu thuyết triệu chữ với phong cách văn học Á Đông thuần khiết.">
+  <meta property="og:image" content="https://ainovel.id.vn/assets/hero-banner.jpg">
+  <meta property="og:locale" content="vi_VN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aitory — Nền Tảng Sáng Tác Tiểu Thuyết Đa Agent Toàn Cầu">
+  <meta name="twitter:description" content="Biến ý tưởng sơ khai thành trường thiên tiểu thuyết triệu chữ với phong cách văn học Á Đông thuần khiết.">
+  <meta name="twitter:image" content="https://ainovel.id.vn/assets/hero-banner.jpg">
+
+  <!-- Front-End Checklist: Favicons & Icons -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+
+  <!-- Google Fonts: Cinzel (Epic/Novel), Plus Jakarta Sans (Modern UI), Lora (Reading Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/editor.css">
+  <!-- Supabase Client JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Global Commercial Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <!-- Brand Logo -->
+      <a class="logo-brand" id="brandHomeLink" title="Về Trang Chủ Aitory" href="#home">
+        <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
+        <div class="brand-text-col">
+          <div class="logo-title">AITORY</div>
+          <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="app-nav-menu" aria-label="Điều hướng chính">
+        <button class="nav-tab-btn active" data-view="home">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Trang Chủ</span>
+        </button>
+        <button class="nav-tab-btn" data-view="library" id="navBtnLibrary">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          <span>Tủ Truyện Cộng Đồng</span>
+        </button>
+        <button class="nav-tab-btn" data-view="studio">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+          <span>Studio Sáng Tác</span>
+        </button>
+
+        <button class="nav-tab-btn" id="navBtnPricing">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/></svg>
+          <span>Bảng Giá</span>
+        </button>
+        <button class="nav-tab-btn" id="navBtnFeatures">
+          <svg class="nav-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Tính Năng</span>
+        </button>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+
+        <!-- Daily Checkin -->
+        <button class="btn btn-sm btn-outline header-tool-btn" id="btnDailyBonus" title="Điểm danh nhận +5 Xu hàng ngày">
+          <svg class="nav-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+          <span>Điểm Danh</span>
+        </button>
+
+        <!-- Coin / Wallet Badge -->
+        <div class="coin-badge" id="btnOpenTopup" title="Xem ví Xu và nạp tiền qua VietQR" style="display:none;">
+          <img src="assets/coin.jpg" alt="Aitory Coin" class="coin-badge-img" width="22" height="22">
+          <span id="userCoinBalance" class="coin-balance-text">0.0</span>
+          <span class="coin-plus-tag">+ Nạp</span>
+        </div>
+
+        <!-- Live Error / Debug Logs -->
+        <button class="btn btn-sm btn-outline header-tool-btn" id="btnOpenSystemLogs" title="Xem Nhật Ký Lỗi & Kiểm Tra Kết Nối AI">
+          <svg class="nav-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span>Log Lỗi</span>
+        </button>
+
+        <!-- Author Account with Dropdown -->
+        <div class="account-dropdown" id="accountDropdownWrapper">
+          <button class="btn btn-sm btn-outline cloud-account-btn" id="btnOpenAccount" title="Tài khoản tác giả & Lưu trữ đám mây">
+            <span id="cloudStatusDot" class="status-dot dot-offline"></span>
+            <svg class="nav-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="accountBtnText">Đăng Nhập</span>
+          </button>
+          <div class="account-dropdown-menu" id="accountDropdownMenu">
+            <button class="dropdown-item" id="dropdownProfileBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Trang Cá Nhân</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item dropdown-item-danger" id="dropdownLogoutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span>Đăng Xuất</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================================== -->
+  <!-- 1. VIEW HOME: GLOBAL COMMERCIAL NOVEL LANDING PAGE -->
+  <!-- ============================================================================== -->
+  <section class="app-view active" id="viewHome">
+    
+    <!-- Hero Section -->
+    <div class="home-hero">
+      <div class="hero-bg-glow"></div>
+      <div class="hero-content-wrapper">
+        <div class="hero-pill-badge">
+          <span class="badge-sparkle">✨</span>
+          <span>NỀN TẢNG TIỂU THUYẾT ĐA AGENT THƯƠNG MẠI TOÀN CẦU</span>
+          <span class="badge-tag">v2.0 PRO</span>
+        </div>
+
+        <h1 class="hero-title">
+          Khởi Sinh Vũ Trụ Văn Học<br>
+          <span class="gradient-text-gold">Bằng Trí Tuệ Đa Agent</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Nền tảng thương mại biến ý tưởng sơ khai thành trường thiên tiểu thuyết triệu chữ với phong cách Á Đông thuần khiết.
+          Tự động hóa lập đại cương 3 hồi, quản lý Lorebook thế giới, chẩn đoán mâu thuẫn cốt truyện và thẩm định chất lượng 7 chiều khắt khe.
+        </p>
+
+        <div class="hero-actions-row">
+          <button class="btn btn-lg btn-primary hero-cta-btn" id="heroBtnStartWriting">
+            🚀 Bắt Đầu Sáng Tác Ngay (Tặng 50 Xu)
+          </button>
+          <button class="btn btn-lg btn-secondary hero-lib-btn" id="heroBtnOpenLibrary">
+            📚 Mở Tủ Truyện Của Bạn
+          </button>
+          <button class="btn btn-lg btn-outline" id="heroBtnPricingScroll">
+            🪙 Xem Bảng Giá Gói Xu
+          </button>
+        </div>
+
+        <!-- Master Hero Showcase Artwork Frame -->
+        <div class="hero-artwork-showcase">
+          <div class="artwork-glow-aura"></div>
+          <div class="artwork-frame">
+            <img src="assets/hero-banner.jpg" alt="Vũ Trụ Sáng Tác Tiểu Thuyết Aitory" class="artwork-main-img" width="1280" height="720" loading="eager">
+            <div class="artwork-overlay-gradient"></div>
+            <div class="artwork-floating-tag">
+              <span class="artwork-tag-dot"></span>
+              <span>Không gian sáng tác Á Đông kỳ ảo 100% bản quyền</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Stats Bar -->
+        <div class="hero-stats-bar">
+          <div class="hero-stat-item">
+            <div class="stat-number">5 AI Agents</div>
+            <div class="stat-label">Phối hợp sáng tác nhịp nhàng</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="stat-number">7 Chiều</div>
+            <div class="stat-label">Thẩm định chất lượng khắt khe</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="stat-number">0ms Tab</div>
+            <div class="stat-label">Gợi ý câu từ tức thì chống bí ý</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Bản quyền tác phẩm thuộc về bạn</div>
+          </div>
+        </div>
+
+        <!-- Interactive Multi-Agent Pipeline Hologram -->
+        <div class="hero-pipeline-card">
+          <div class="pipeline-header">
+            <div class="pipeline-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="pipeline-title">HỆ THỐNG 5 AGENT TỰ ĐỘNG PHỐI HỢP TRONG THỜI GIAN THỰC</div>
+            <span class="pipeline-badge">LIVE DEMO</span>
+          </div>
+
+          <div class="pipeline-steps-grid">
+            <div class="pipeline-step-box active">
+              <div class="step-avatar-wrapper">
+                <img src="assets/agent-architect.jpg" alt="Architect Agent" class="step-avatar-img" width="48" height="48" loading="lazy">
+                <span class="step-num-badge">01</span>
+              </div>
+              <div class="step-role">ARCHITECT AGENT</div>
+              <div class="step-desc">Lập dàn ý 3 hồi & thiết lập Lorebook nhân vật, cảnh giới</div>
+            </div>
+
+            <div class="pipeline-step-box active">
+              <div class="step-avatar-wrapper">
+                <img src="assets/agent-writer.jpg" alt="Writer Agent" class="step-avatar-img" width="48" height="48" loading="lazy">
+                <span class="step-num-badge">02</span>
+              </div>
+              <div class="step-role">WRITER AGENT</div>
+              <div class="step-desc">Hành văn giàu xúc cảm theo nguyên tắc Show, Don't Tell</div>
+            </div>
+
+            <div class="pipeline-step-box active">
+              <div class="step-avatar-wrapper">
+                <img src="assets/agent-editor.jpg" alt="7D Editor Agent" class="step-avatar-img" width="48" height="48" loading="lazy">
+                <span class="step-num-badge">03</span>
+              </div>
+              <div class="step-role">7D EDITOR AGENT</div>
+              <div class="step-desc">Rà soát mâu thuẫn cốt truyện & chấm điểm 7 tiêu chuẩn</div>
+            </div>
+
+            <div class="pipeline-step-box active">
+              <div class="step-avatar-wrapper">
+                <img src="assets/agent-arbiter.jpg" alt="Arbiter Agent" class="step-avatar-img" width="48" height="48" loading="lazy">
+                <span class="step-num-badge">04</span>
+              </div>
+              <div class="step-role">ARBITER AGENT</div>
+              <div class="step-desc">Trọng tài thẩm định phê duyệt bản thảo đạt chuẩn xuất sắc</div>
+            </div>
+
+            <div class="pipeline-step-box active">
+              <div class="step-avatar-wrapper">
+                <img src="assets/agent-coordinator.jpg" alt="Coordinator Agent" class="step-avatar-img" width="48" height="48" loading="lazy">
+                <span class="step-num-badge">05</span>
+              </div>
+              <div class="step-role">COORDINATOR AGENT</div>
+              <div class="step-desc">Hạch tâm điều phối thời gian thực kết nối toàn bộ tiến trình</div>
+            </div>
+          </div>
+
+          <!-- Live Sample Snippet -->
+          <div class="pipeline-snippet-box">
+            <div class="snippet-tag">TIỂU THUYẾT TIÊN HIỆP ĐANG SÁNG TÁC: ĐẠO QUÂN TRUYỀN KỲ</div>
+            <div class="snippet-text">
+              "Gió lạnh rít qua từng khe đá sắc nhọn trên sườn Hắc Lôi Nhai. Diệp Trần quỳ trên nền đất ẩm mốc, từng giọt máu tươi theo khóe môi nhỏ xuống, nhuộm đỏ tấm áo thô sờn rách. Khí hải trong đan điền trống rỗng, nhưng trong đôi mắt vằn tia máu ấy, một đạo lôi quang màu tím thẫm đột ngột bùng nổ..."
+            </div>
+            <div class="snippet-footer">
+              <span class="snippet-meta">Chương 1 &bull; 285 từ &bull; Điểm Thẩm Định: <strong style="color:var(--accent-emerald);">9.2/10 (Xuất Sắc)</strong></span>
+              <button class="btn btn-sm btn-primary" id="btnHeroTryEditor">✍️ Vào Studio Viết Tiếp</button>
+            </div>
+          </div>
+        </div>
+
+          <!-- Live Sample Snippet -->
+          <div class="pipeline-snippet-box">
+            <div class="snippet-tag">TIỂU THUYẾT TIÊN HIỆP ĐANG SÁNG TÁC: ĐẠO QUÂN TRUYỀN KỲ</div>
+            <div class="snippet-text">
+              "Gió lạnh rít qua từng khe đá sắc nhọn trên sườn Hắc Lôi Nhai. Diệp Trần quỳ trên nền đất ẩm mốc, từng giọt máu tươi theo khóe môi nhỏ xuống, nhuộm đỏ tấm áo thô sờn rách. Khí hải trong đan điền trống rỗng, nhưng trong đôi mắt vằn tia máu ấy, một đạo lôi quang màu tím thẫm đột ngột bùng nổ..."
+            </div>
+            <div class="snippet-footer">
+              <span class="snippet-meta">Chương 1 &bull; 285 từ &bull; Điểm Thẩm Định: <strong style="color:var(--accent-emerald);">9.2/10 (Xuất Sắc)</strong></span>
+              <button class="btn btn-sm btn-primary" id="btnHeroTryEditor">✍️ Vào Studio Viết Tiếp</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 2: Bento Grid Features -->
+    <section class="home-section" id="sectionFeatures">
+      <div class="section-container">
+        <div class="section-header-center">
+          <span class="section-kicker">CÔNG NGHỆ ĐỘT PHÁ</span>
+          <h2 class="section-title">Vũ Khí Sáng Tác Toàn Diện Của Tiểu Thuyết Gia</h2>
+          <p class="section-subtitle">
+            Không phải một chatbox đơn thuần, Aitory là cả một tòa soạn văn học thu nhỏ hoạt động phối hợp nhịp nhàng.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Card 1 -->
+          <div class="bento-card bento-span-2">
+            <div class="bento-icon">🧠</div>
+            <h3 class="bento-title">Kiến Trúc 5 AI Agent Chuyên Biệt</h3>
+            <p class="bento-desc">
+              Phân công nhiệm vụ chặt chẽ: Kiến Trúc Sư lập dàn ý cuốn theo từng khối 5-10 chương, Cây Bút sáng tác chống sáo ngữ AI, Biên Tập Viên rà soát 7 chiều và Trọng Tài phân xử bản thảo.
+            </p>
+            <div class="bento-tag-list">
+              <span class="bento-tag">Coordinator</span>
+              <span class="bento-tag">Architect</span>
+              <span class="bento-tag">Writer</span>
+              <span class="bento-tag">Editor 7D</span>
+              <span class="bento-tag">Arbiter</span>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bento-card">
+            <div class="bento-icon">👤</div>
+            <h3 class="bento-title">Codex & Lorebook Đa Chiều</h3>
+            <p class="bento-desc">
+              Hệ thống thẻ nhân vật, phân chia môn phái, hệ thống cảnh giới tu vi và bảo vật. AI tự động kích hoạt ngữ cảnh khi nhân vật xuất hiện.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bento-card">
+            <div class="bento-icon">🕸️</div>
+            <h3 class="bento-title">Đồ Thị Mạng Lưới Quan Hệ</h3>
+            <p class="bento-desc">
+              Bản đồ trực quan hóa mối quan hệ huynh đệ, sư đồ, kẻ thù, hồng nhan tri kỷ. Đảm bảo cốt truyện không bao giờ bị loạn tuyến nhân vật.
+            </p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bento-card">
+            <div class="bento-icon">⚡</div>
+            <h3 class="bento-title">Ghost-Text Tab Autocomplete</h3>
+            <p class="bento-desc">
+              Đánh bại triệt để cảm giác "bí ý tưởng". Nhấn phím Tab bất kỳ lúc nào để AI gợi ý câu tiếp theo một cách mượt mà và tự nhiên nhất.
+            </p>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="bento-card">
+            <div class="bento-icon">🔍</div>
+            <h3 class="bento-title">Chẩn Đoán Cốt Truyện (/diag)</h3>
+            <p class="bento-desc">
+              Thuật toán tự động quét toàn bộ mạch truyện và Lorebook để phát hiện lỗ hổng logic, mâu thuẫn thời gian hay sai lệch tu vi của nhân vật.
+            </p>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="bento-card bento-span-3">
+            <div class="bento-icon">📥</div>
+            <h3 class="bento-title">Đóng Gói & Xuất Bản Sách Đa Định Dạng</h3>
+            <p class="bento-desc">
+              Xuất bản trọn gói toàn bộ bộ truyện thành file TXT đọc offline, Markdown chuẩn biên tập chuyên nghiệp, hoặc Sách điện tử Web HTML Reader sang trọng chuẩn phong cách đọc tiểu thuyết cao cấp.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Curated Genre Showcase -->
+    <section class="home-section section-darker" id="sectionGenres">
+      <div class="section-container">
+        <div class="section-header-center">
+          <span class="section-kicker">THỂ LOẠI ĐA DẠNG</span>
+          <h2 class="section-title">Tối Ưu Sâu Cho Mọi Dòng Tiểu Thuyết Á Đông</h2>
+          <p class="section-subtitle">
+            Mỗi thể loại được nạp sẵn bộ quy tắc hành văn (Voice Presets) và từ vựng đặc trưng để đảm bảo câu từ đúng chất văn học.
+          </p>
+        </div>
+
+        <div class="genre-cards-grid">
+          <!-- Genre 1 -->
+          <div class="genre-book-card" data-genre="xianxia">
+            <div class="book-spine xianxia"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">TIÊN HIỆP / TU CHÂN</span>
+              <h4 class="book-title">Đạo Quân Truyền Kỳ</h4>
+              <p class="book-desc">Hành trình nghịch thiên cải mệnh, đan điền, linh khí, pháp bảo, môn phái và đại đạo cửu thiên.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Thiên Đạo Giả</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="xianxia">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre 2 -->
+          <div class="genre-book-card" data-genre="wuxia">
+            <div class="book-spine wuxia"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">KIẾM HIỆP / VÕ HIỆP</span>
+              <h4 class="book-title">Tiếu Ngạo Thiên Nhai</h4>
+              <p class="book-desc">Giang hồ ân oán tình thù, hiệp nghĩa, dao quang kiếm ảnh, nội lực thâm hậu và rượu nồng gió lộng.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Bút Lạc Phong Vân</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="wuxia">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre 3 -->
+          <div class="genre-book-card" data-genre="urban">
+            <div class="book-spine urban"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">ĐÔ THỊ / DỊ NĂNG</span>
+              <h4 class="book-title">Trọng Sinh Thần Cấp</h4>
+              <p class="book-desc">Trùng sinh về quá khứ, tranh đấu thương trường, siêu xe, thế gia bí ẩn và năng lực dị năng bóng tối.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Cửu Trọng Thiên</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="urban">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre 4 -->
+          <div class="genre-book-card" data-genre="romance">
+            <div class="book-spine romance"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">NGÔN TÌNH / TRỌNG SINH</span>
+              <h4 class="book-title">Phượng Hoàng Niết Bàn</h4>
+              <p class="book-desc">Cung đình quyền mưu, thâm tình ngọt ngào xen lẫn giằng xé nội tâm tinh tế của người phụ nữ kiên cường.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Dạ Nguyệt Chi</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="romance">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre 5 -->
+          <div class="genre-book-card" data-genre="mystery">
+            <div class="book-spine mystery"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">LINH DỊ / TRINH THÁM</span>
+              <h4 class="book-title">Bí Ẩn Trấn Sương Mù</h4>
+              <p class="book-desc">Không khí rùng rợn, nghẹt thở, cài cắm manh mối logic sắc bén phá giải những kỳ án dị thường.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Ẩn Danh Thám Tử</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="mystery">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre 6 -->
+          <div class="genre-book-card" data-genre="scifi">
+            <div class="book-spine scifi"></div>
+            <div class="book-cover-content">
+              <span class="genre-pill">KHOA HUYỄN / VŨ TRỤ</span>
+              <h4 class="book-title">Kỷ Nguyên Tinh Hạm</h4>
+              <p class="book-desc">Chiến hạm không gian, đột biến gen, chiến tranh giữa các thiên hà và công nghệ máy móc lạnh lùng.</p>
+              <div class="book-footer">
+                <span class="book-author">✍️ Tinh Cầu Lữ Giả</span>
+                <button class="btn btn-sm btn-primary btnCreateGenreStory" data-genre="scifi">Viết Thể Loại Này</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Commercial Pricing Packages -->
+    <section class="home-section" id="sectionPricing">
+      <div class="section-container">
+        <div class="section-header-center">
+          <span class="section-kicker">MINH BẠCH & TIẾT KIỆM</span>
+          <h2 class="section-title">Bảng Giá Gói Xu Sáng Tác Thương Mại</h2>
+          <p class="section-subtitle">
+            Chỉ trả tiền theo đúng lượng văn bản bạn sáng tác. <strong>1 Xu = 100đ = 1.000 Tokens</strong> (~ 600 - 700 chữ tiếng Việt mượt mà).
+          </p>
+        </div>
+
+        <div class="home-pricing-grid">
+          <!-- Package 1 -->
+          <div class="home-pricing-card" data-pkg="starter">
+            <div class="pricing-badge">CƠ BẢN</div>
+            <h3 class="pricing-title">Tập Sự</h3>
+            <div class="pricing-price">20.000 <span class="currency">VNĐ</span></div>
+            <div class="pricing-coins">180 Xu</div>
+            <p class="pricing-desc">Phù hợp viết thử nghiệm ~ 60 chương truyện ngắn hoặc dàn ý chi tiết.</p>
+            <ul class="pricing-features">
+              <li>✔️ Mở khóa toàn bộ 5 AI Agent</li>
+              <li>✔️ Gợi ý Tab Ghost-Text tức thì</li>
+              <li>✔️ Lưu trữ đám mây Supabase an toàn</li>
+              <li>✔️ Xuất bản file TXT / MD</li>
+            </ul>
+            <button class="btn btn-outline btnBuyPackage" data-pkg="starter">Nạp Gói Tập Sự</button>
+          </div>
+
+          <!-- Package 2 (Popular) -->
+          <div class="home-pricing-card popular" data-pkg="author">
+            <div class="pricing-badge popular-badge">⭐ PHỔ BIẾN NHẤT (+10%)</div>
+            <h3 class="pricing-title">Tác Giả</h3>
+            <div class="pricing-price">50.000 <span class="currency">VNĐ</span></div>
+            <div class="pricing-coins">500 Xu</div>
+            <p class="pricing-desc">Dành cho tác giả sáng tác đều tay ~ 165 chương tiểu thuyết dài tập.</p>
+            <ul class="pricing-features">
+              <li>✔️ Mở khóa toàn bộ 5 AI Agent</li>
+              <li>✔️ Đồ thị quan hệ nhân vật tương tác</li>
+              <li>✔️ Chẩn đoán mâu thuẫn cốt truyện /diag</li>
+              <li>✔️ Thẩm định 7 chiều Editor không giới hạn</li>
+              <li>✔️ Xuất bản trọn gói Sách điện tử Web HTML</li>
+            </ul>
+            <button class="btn btn-primary btnBuyPackage" data-pkg="author">Nạp Gói Tác Giả (50k)</button>
+          </div>
+
+          <!-- Package 3 -->
+          <div class="home-pricing-card" data-pkg="master">
+            <div class="pricing-badge">TIẾT KIỆM (+15%)</div>
+            <h3 class="pricing-title">Đại Thần</h3>
+            <div class="pricing-price">100.000 <span class="currency">VNĐ</span></div>
+            <div class="pricing-coins">1.150 Xu</div>
+            <p class="pricing-desc">Gói tối ưu cho tác giả chuyên nghiệp viết các bộ truyện đồ sộ ~ 380 chương.</p>
+            <ul class="pricing-features">
+              <li>✔️ Toàn bộ quyền lợi gói Tác Giả</li>
+              <li>✔️ Thêm +15% Xu thưởng nạp</li>
+              <li>✔️ Hỗ trợ viết chương VIP siêu dài</li>
+              <li>✔️ Ưu tiên hàng đợi tốc độ cao</li>
+            </ul>
+            <button class="btn btn-outline btnBuyPackage" data-pkg="master">Nạp Gói Đại Thần</button>
+          </div>
+
+          <!-- Package 4 -->
+          <div class="home-pricing-card" data-pkg="celestial">
+            <div class="pricing-badge celestial-badge">👑 VIP CAO CẤP (+25%)</div>
+            <h3 class="pricing-title">Thần Cấp VIP</h3>
+            <div class="pricing-price">200.000 <span class="currency">VNĐ</span></div>
+            <div class="pricing-coins">2.500 Xu</div>
+            <p class="pricing-desc">Gói sáng tác không giới hạn, thỏa sức xây dựng cả vũ trụ văn học đồ sộ.</p>
+            <ul class="pricing-features">
+              <li>✔️ Toàn bộ tính năng cao cấp nhất</li>
+              <li>✔️ Tặng thêm +25% Xu thưởng (500 Xu)</li>
+              <li>✔️ Tốc độ xử lý ưu tiên tuyệt đối</li>
+              <li>✔️ Hỗ trợ kỹ thuật 24/7 từ quản trị viên</li>
+            </ul>
+            <button class="btn btn-outline btnBuyPackage" data-pkg="celestial">Nạp Gói Thần Cấp</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global Footer -->
+    <footer class="home-footer">
+      <div class="footer-container">
+        <div class="footer-top">
+          <div class="footer-brand-col">
+            <div class="logo-brand">
+              <div class="logo-icon">📖</div>
+              <div>
+                <div class="logo-text">AITORY</div>
+                <span class="logo-badge">Global Novel SaaS</span>
+              </div>
+            </div>
+            <p class="footer-tagline">
+              Nền tảng sáng tác tiểu thuyết bằng AI Đa Agent thế hệ mới. Khởi tạo vũ trụ văn học triệu chữ của riêng bạn với chất lượng xuất bản toàn cầu.
+            </p>
+          </div>
+
+          <div class="footer-links-col">
+            <h4 class="footer-heading">Phân Hệ</h4>
+            <ul class="footer-links">
+              <li><a href="#" class="footer-nav-link" data-view="home">Trang Chủ</a></li>
+              <li><a href="#" class="footer-nav-link" data-view="library">Tủ Truyện Tác Giả</a></li>
+              <li><a href="#" class="footer-nav-link" data-view="studio">Studio Soạn Thảo</a></li>
+              <li><a href="#sectionPricing">Bảng Giá Nạp Xu</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links-col">
+            <h4 class="footer-heading">Thể Loại Hỗ Trợ</h4>
+            <ul class="footer-links">
+              <li>Tiên Hiệp & Tu Chân</li>
+              <li>Kiếm Hiệp & Võ Lâm</li>
+              <li>Đô Thị & Dị Năng</li>
+              <li>Ngôn Tình & Trọng Sinh</li>
+              <li>Linh Dị & Trinh Thám</li>
+              <li>Khoa Huyễn & Vũ Trụ</li>
+            </ul>
+          </div>
+
+          <div class="footer-links-col">
+            <h4 class="footer-heading">Cam Kết Thương Mại</h4>
+            <ul class="footer-links">
+              <li>✔️ 100% Tác quyền thuộc về bạn</li>
+              <li>✔️ Dữ liệu lưu trữ mã hóa trên Supabase</li>
+              <li>✔️ Thanh toán quét mã VietQR tự động</li>
+              <li>✔️ Không chứa ngôn từ sáo rỗng AI</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© 2026 Aitory Novel Studio. Toàn bộ bản quyền được bảo hộ.</div>
+          <div style="display:flex; gap:16px;">
+            <span>Chính Sách Bảo Mật</span>
+            <span>Điều Khoản Dịch Vụ</span>
+            <span>Hỗ Trợ Kỹ Thuật</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </section>
+
+  <!-- ============================================================================== -->
+  <!-- 2. VIEW LIBRARY: GLOBAL PUBLIC COMMUNITY NOVEL LIBRARY -->
+  <!-- ============================================================================== -->
+  <section class="app-view" id="viewLibrary" style="display:none;">
+    <div class="library-view-container">
+      
+      <div class="library-header-bar">
+        <div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); padding:4px 12px; border-radius:100px; font-size:0.8rem; color:var(--accent-cyan); font-weight:600; margin-bottom:8px;">
+            <span>🌐</span> KHÔNG GIAN VĂN HỌC MỞ TOÀN CẦU
+          </div>
+          <h1 class="library-page-title">🌐 Tủ Truyện Cộng Đồng</h1>
+          <p class="library-page-desc">Khám phá và đọc các tác phẩm tiểu thuyết đặc sắc được sáng tác và công khai bởi cộng đồng tác giả Aitory.</p>
+        </div>
+        <div class="library-header-actions">
+          <button class="btn btn-outline" id="btnLibraryGoToProfile">👤 Quản Lý Truyện Của Tôi</button>
+          <button class="btn btn-primary" id="btnLibraryViewCreateNew">➕ Đăng Tác Phẩm Mới</button>
+        </div>
+      </div>
+
+      <!-- Community Mode Sub-tabs -->
+      <div class="community-tabs-row" style="display:flex; gap:12px; margin-bottom:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+        <button class="btn btn-sm btn-secondary community-sub-tab active" data-tab="public" id="tabLibCommunityAll">
+          🌐 Tất Cả Tác Phẩm Công Khai
+        </button>
+        <button class="btn btn-sm btn-outline community-sub-tab" data-tab="followed" id="tabLibFollowed">
+          ⭐ Truyện Đang Theo Dõi (<span id="followedCountBadge">0</span>)
+        </button>
+      </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="library-filter-bar">
+        <input type="text" class="form-input" id="librarySearchInput" placeholder="🔍 Tìm kiếm theo tên tác phẩm hoặc bút danh..." style="max-width:380px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-sm btn-outline library-filter-btn active" data-genre="all">Tất Cả</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="xianxia">Tiên Hiệp</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="wuxia">Kiếm Hiệp</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="urban">Đô Thị</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="romance">Ngôn Tình</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="scifi">Khoa Huyễn</button>
+          <button class="btn btn-sm btn-outline library-filter-btn" data-genre="mystery">Linh Dị</button>
+        </div>
+      </div>
+
+      <!-- Full-Page Novels Grid -->
+      <div class="full-library-grid" id="fullLibraryGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================================== -->
+  <!-- 3. VIEW PROFILE: AUTHOR PERSONAL PAGE & STORY MANAGEMENT -->
+  <!-- ============================================================================== -->
+  <section class="app-view" id="viewProfile" style="display:none;">
+    <div class="library-view-container">
+
+      <!-- Author Banner Card -->
+      <div class="author-banner-card">
+        <div class="author-banner-bg-glow"></div>
+        <div class="author-banner-content">
+          <div class="author-avatar-wrapper">
+            <div class="author-avatar-img">✍️</div>
+            <div class="author-avatar-badge" title="Tác giả được xác thực">⭐</div>
+          </div>
+
+          <div class="author-info-main">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <h2 class="author-name-title" id="profilePageAuthorName">Bút Danh Tác Giả</h2>
+              <button class="btn btn-sm btn-outline" id="btnOpenEditPenName" title="Đổi bút danh sáng tác" style="padding:3px 8px; font-size:0.75rem;">
+                ✏️ Đổi Bút Danh
+              </button>
+              <span class="badge badge-success" style="font-size:0.75rem;">🟢 Đang Lưu Trữ Supabase</span>
+            </div>
+
+            <div class="author-meta-row">
+              <span id="profilePageEmail">📧 email@example.com</span>
+              <span>•</span>
+              <span id="profilePageRole">✨ Tác Giả Xuất Sắc</span>
+              <span>•</span>
+              <span id="profilePageJoinDate">📅 Thành viên từ 2026</span>
+            </div>
+
+            <p class="author-bio-text" id="profilePageBio">
+              Chào mừng đến với góc sáng tác của tôi. Đam mê trường thiên tiểu thuyết Á Đông, xây dựng thế giới đa chiều với sự hỗ trợ của hệ thống Đa Agent Aitory.
+            </p>
+          </div>
+
+          <div class="author-banner-actions">
+            <button class="btn btn-primary" id="btnProfileCreateNewStory">➕ Tạo Bộ Truyện Mới</button>
+            <button class="btn btn-secondary" id="btnProfileDailyBonus">🎁 Điểm Danh Nhận Xu</button>
+            <button class="btn btn-outline" id="btnProfileTopup">🪙 Nạp Xu VietQR</button>
+            <button class="btn btn-outline" id="btnProfileSignOut" style="color:#f87171; border-color:rgba(239,68,68,0.3);">🚪 Đăng Xuất</button>
+          </div>
+        </div>
+
+        <!-- Author Stats Row -->
+        <div class="author-stats-grid">
+          <div class="author-stat-box">
+            <div class="stat-box-val" id="profileStatNovelsCount">0</div>
+            <div class="stat-box-lbl">📖 Tác Phẩm Đã Viết</div>
+          </div>
+          <div class="author-stat-box">
+            <div class="stat-box-val" id="profileStatChaptersCount">0</div>
+            <div class="stat-box-lbl">📜 Tổng Số Chương</div>
+          </div>
+          <div class="author-stat-box">
+            <div class="stat-box-val" id="profileStatWordsCount">0</div>
+            <div class="stat-box-lbl">✍️ Tổng Lượng Từ</div>
+          </div>
+          <div class="author-stat-box">
+            <div class="stat-box-val" id="profileStatCoinsBalance" style="color:var(--accent-gold);">50.0 🪙</div>
+            <div class="stat-box-lbl">💰 Số Dư Ví Xu</div>
+          </div>
+          <div class="author-stat-box">
+            <div class="stat-box-val" id="profileStatViewsTotal" style="color:var(--accent-cyan);">0</div>
+            <div class="stat-box-lbl">👁️ Tổng Lượt Đọc</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Author's Novels Management Section -->
+      <div class="author-stories-header" style="display:flex; justify-content:space-between; align-items:center; margin:32px 0 16px;">
+        <div>
+          <h2 style="font-size:1.4rem; font-weight:700; color:var(--text-main); font-family:var(--font-title);">
+            📚 Danh Sách Tác Phẩm Của Bạn
+          </h2>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-top:4px;">
+            Quản lý truyện đã sáng tác. Bấm <strong>"🌐 Đăng Lên Tủ Truyện"</strong> để chia sẻ với cộng đồng độc giả hoặc <strong>"🔒 Gỡ Xuống"</strong> để chuyển về riêng tư.
+          </p>
+        </div>
+        <button class="btn btn-primary" id="btnProfileSectionNew">➕ Tạo Truyện Mới</button>
+      </div>
+
+      <div class="full-library-grid" id="authorStoriesGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================================== -->
+  <!-- 3. VIEW STUDIO: 3-COLUMN WORKSPACE -->
+  <!-- ============================================================================== -->
+  <section class="app-view" id="viewStudio" style="display:none;">
+
+    <!-- Studio Top Bar for Quick Navigation -->
+    <div class="studio-sub-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="btn btn-sm btn-outline" id="btnStudioBackToHome">← Về Trang Chủ</button>
+        <button class="btn btn-sm btn-secondary" id="btnStudioOpenLibrary">📚 Tủ Truyện</button>
+        <span style="color:var(--text-muted); font-size:0.85rem;">|</span>
+        <span style="font-weight:600; font-size:0.9rem;" id="studioTopBarTitle">Đang viết tác phẩm...</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <!-- /diag Story Diagnostics -->
+        <button class="btn btn-sm btn-outline" id="btnStudioDiag" title="Chẩn đoán mâu thuẫn cốt truyện /diag">
+          🔍 /diag
+        </button>
+        <!-- /export Novel -->
+        <button class="btn btn-sm btn-outline" id="btnStudioExport" title="Xuất bản tiểu thuyết TXT / EPUB / HTML">
+          📥 Xuất Bản
+        </button>
+      </div>
+    </div>
+
+    <!-- Main 3-Column Studio Workspace -->
+    <main class="studio-layout" id="studioLayout">
+
+    <!-- Column 1: Left Navigator Sidebar -->
+    <aside class="studio-sidebar-left">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab-btn active" data-tab="paneChapters">📑 Chương Hồi</button>
+        <button class="sidebar-tab-btn" data-tab="paneLorebook">👤 Lorebook</button>
+        <button class="sidebar-tab-btn" data-tab="paneGraph">🕸️ Quan Hệ</button>
+      </div>
+
+      <!-- Tab 1: Chapters -->
+      <div class="sidebar-content-pane" id="paneChapters">
+        <div class="project-meta-box">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+            <div class="project-title-label" id="studioProjectTitle">Đạo Quân Truyền Kỳ</div>
+            <button class="btn btn-sm btn-outline" id="btnSwitchProjectQuick" style="padding:2px 6px; font-size:0.75rem;" title="Đổi sang truyện khác">Đổi</button>
+          </div>
+          <span class="project-genre-badge" id="studioProjectGenre">TIÊN HIỆP</span>
+        </div>
+
+        <div class="chapter-tree-header">
+          <strong style="font-size:0.85rem; color:var(--text-muted);">DANH SÁCH CHƯƠNG</strong>
+          <button class="btn btn-sm btn-primary" id="btnNewChapter" title="Thêm chương mới" style="padding:4px 8px; font-size:0.8rem;">+ Thêm Chương</button>
+        </div>
+
+        <div id="studioChapterList">
+          <!-- Dynamic chapter list -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Lorebook World Codex -->
+      <div class="sidebar-content-pane" id="paneLorebook" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <strong style="font-size:0.85rem; color:var(--text-muted);">HỒ SƠ THẾ GIỚI & NHÂN VẬT</strong>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sm btn-outline" id="btnLoreAutoExtract" title="Architect AI tự động phân tích nhân vật từ truyện" style="padding:3px 7px; font-size:0.75rem;">✨ AI Quét</button>
+            <button class="btn btn-sm btn-primary" id="btnLoreAdd" title="Thêm nhân vật/hồ sơ mới" style="padding:3px 7px; font-size:0.75rem;">+ Thêm</button>
+          </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="lore-filter-bar" style="display:flex; gap:4px; margin-bottom:10px; overflow-x:auto; padding-bottom:4px;">
+          <button class="lore-filter-pill active" data-cat="all">Tất cả</button>
+          <button class="lore-filter-pill" data-cat="character">👤 Nhân vật</button>
+          <button class="lore-filter-pill" data-cat="faction">🏛️ Môn phái</button>
+          <button class="lore-filter-pill" data-cat="artifact">⚔️ Pháp bảo</button>
+        </div>
+
+        <div id="studioLoreList">
+          <!-- Dynamic Lorebook items -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Character Relationship Graph -->
+      <div class="sidebar-content-pane" id="paneGraph" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <strong style="font-size:0.85rem; color:var(--text-muted);">SƠ ĐỒ MẠNG LƯỚI QUAN HỆ</strong>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sm btn-outline" id="btnGraphResetPreset" title="Khởi tạo lại nhân vật mẫu theo thể loại" style="padding:3px 7px; font-size:0.75rem;">✨ Mẫu</button>
+            <button class="btn btn-sm btn-primary" id="btnGraphAddCharTop" title="Thêm nhân vật vào sơ đồ" style="padding:3px 7px; font-size:0.75rem;">+ Thêm</button>
+          </div>
+        </div>
+        <div id="characterGraphContainer" style="min-height: 280px; background:var(--bg-primary); border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+          <!-- Dynamic SVG Relationship Graph -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Column 2: Center Editor Canvas -->
+    <section class="studio-canvas">
+      <!-- Canvas Header -->
+      <div class="canvas-header">
+        <input type="text" class="chapter-title-input" id="chapterTitleInput" value="Chương 1: Đan Điền Bị Phế, Thần Lệnh Thức Tỉnh" placeholder="Nhập tiêu đề chương...">
+        
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="btn btn-sm btn-outline" id="btnZenMode" title="Chế độ tập trung toàn màn hình (F11)">
+            🔲 Zen Mode
+          </button>
+          <button class="btn btn-sm btn-primary" id="btnRunMultiAgent" title="Kích hoạt 5 Agent tự động viết tiếp phân cảnh">
+            🚀 Viết Tiếp (Đa Agent)
+          </button>
+          <button class="btn btn-sm btn-outline" id="btnStopAgent" style="display:none; color:var(--accent-rose); border-color:var(--accent-rose);">
+            ⏹️ Tạm Dừng
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Body / Novel Paper -->
+      <div class="canvas-body" id="canvasBody">
+        <div class="editor-paper">
+          <textarea class="novel-textarea" id="novelTextarea" placeholder="Bắt đầu viết tiểu thuyết của bạn tại đây..."></textarea>
+
+          <!-- Ghost-Text Tab Autocomplete Container -->
+          <div class="ghost-text-container" id="ghostTextContainer" style="display:none;">
+            <div>
+              <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700; margin-right:8px;">AI GỢI Ý:</span>
+              <span class="ghost-text-content" id="ghostTextContent"></span>
+            </div>
+            <div class="ghost-text-hints">
+              <span class="kbd-badge">Tab</span> Nhận
+              <span class="kbd-badge">Esc</span> Bỏ qua
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating AI Action Bubble Menu -->
+        <div class="floating-ai-menu" id="floatingAiMenu">
+          <button class="floating-btn" data-action="expand">✍️ Mở Rộng (Show Don't Tell)</button>
+          <button class="floating-btn" data-action="dialog">🎭 Hội Thoại Hóa</button>
+        </div>
+      </div>
+
+      <!-- Canvas Status Bar -->
+      <footer class="canvas-statusbar">
+        <div class="statusbar-group">
+          <span id="canvasWordCount">310 từ</span>
+          <span id="canvasReadTime">~1 phút đọc</span>
+          <span style="color:var(--accent-cyan);">🤖 AI Core: Đa Agent Sáng Tác</span>
+        </div>
+        <div class="statusbar-group">
+          <span id="canvasSaveStatus">Đã lưu đám mây</span>
+          <span>Phí: 3.0 Xu / chương</span>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Column 3: Right Multi-Agent Studio & 7D Evaluation -->
+    <aside class="studio-sidebar-right">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab-btn active" data-tab="paneActivity">🤖 Đa Agent</button>
+        <button class="sidebar-tab-btn" data-tab="pane7D">⚖️ Thẩm Định 7D</button>
+      </div>
+
+      <!-- Tab 1: Activity Stream -->
+      <div class="sidebar-content-pane" id="paneActivity">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <strong style="font-size:0.85rem; color:var(--text-muted);">TIẾN TRÌNH ĐA AGENT (ACTIVITY STREAM)</strong>
+        </div>
+
+        <div class="activity-stream" id="agentActivityStream">
+          <div class="activity-card coordinator">
+            <div class="activity-header">
+              <span class="agent-tag coordinator">coordinator</span>
+              <span class="activity-time">Vừa xong</span>
+            </div>
+            <div class="activity-body">Hệ thống Đa Agent đã sẵn sàng. Bạn có thể gõ phím và ấn Tab để nhận gợi ý, hoặc nhấn "🚀 Viết Tiếp" để AI tự động triển khai phân cảnh.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 7-Dimension Evaluation -->
+      <div class="sidebar-content-pane" id="pane7D" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <strong style="font-size:0.85rem; color:var(--text-muted);">THẨM ĐỊNH CHẤT LƯỢNG 7 CHIỀU</strong>
+          <button class="btn btn-sm btn-outline" id="btnRun7D">Đánh Giá Ngay</button>
+        </div>
+
+        <div class="score-7d-box">
+          <div class="score-7d-overall">
+            <span style="font-size:0.9rem; color:var(--text-muted);">Điểm Đánh Giá:</span>
+            <span class="overall-score-num" id="overall7dScore">-- / 10</span>
+          </div>
+
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>1. Tính nhất quán (Consistency)</span><span>9.5/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 95%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>2. Khẩu khí nhân vật (Voice Fidelity)</span><span>9.0/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 90%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>3. Tiết tấu & Nhịp độ (Pacing)</span><span>8.5/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 85%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>4. Mạch truyện & Logic (Coherence)</span><span>9.0/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 90%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>5. Cài cắm phục bút (Foreshadowing)</span><span>8.0/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 80%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>6. Móc câu kết chương (Hooks)</span><span>8.5/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 85%;"></div></div>
+          </div>
+          <div class="score-bar-item">
+            <div class="score-bar-label"><span>7. Văn phong chống sáo rỗng (Anti-AI)</span><span>9.0/10</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width: 90%;"></div></div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85rem; color:var(--text-muted); background:var(--bg-primary); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); line-height:1.6; white-space:pre-wrap;" id="eval7dOutput">
+Nhấn "Đánh Giá Ngay" để Editor Agent phân tích chi tiết từng hạt sạn và chấm điểm 7 chiều cho chương truyện của bạn.
+        </div>
+      </div>
+    </aside>
+
+  </main>
+  </section>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. My Novels Library Modal (Tủ Truyện Của Tôi) -->
+  <div class="modal-backdrop" id="libraryModal">
+    <div class="modal-box" style="max-width:800px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          <span>Tủ Truyện Của Tôi (Các Tác Phẩm Đã Viết)</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <span style="font-size:0.88rem; color:var(--text-muted);">Quản lý, chỉnh sửa hoặc chuyển đổi nhanh giữa các bộ truyện:</span>
+          <button class="btn btn-sm btn-primary" id="btnLibraryCreateNew">+ Tạo Tác Phẩm Mới</button>
+        </div>
+
+        <!-- Novel Cards Grid -->
+        <div class="novel-library-grid" id="novelLibraryGrid">
+          <!-- Dynamic Novel Cards -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. VietQR Payment / Top-up Modal -->
+  <div class="modal-backdrop" id="topupModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/></svg>
+          <span>Nạp Xu Tự Động Qua VietQR</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:16px;">
+          Tỷ giá quy ước: <strong>1 Xu = 100đ = 1.000 Tokens</strong> (Viết được ~ 600 - 700 từ). Quét mã QR ngân hàng nhận Xu ngay sau 2 giây.
+        </p>
+
+        <!-- Package Grid -->
+        <div class="package-grid">
+          <div class="package-card" data-pkg="starter">
+            <div class="package-name">Tập Sự</div>
+            <div class="package-coins">180 Xu</div>
+            <div class="package-price">20.000 đ</div>
+          </div>
+          <div class="package-card active" data-pkg="author">
+            <div class="package-name">Tác Giả ⭐</div>
+            <div class="package-coins">500 Xu</div>
+            <div class="package-price">50.000 đ</div>
+          </div>
+          <div class="package-card" data-pkg="master">
+            <div class="package-name">Đại Thần (+15%)</div>
+            <div class="package-coins">1.150 Xu</div>
+            <div class="package-price">100.000 đ</div>
+          </div>
+          <div class="package-card" data-pkg="celestial">
+            <div class="package-name">Thần Cấp VIP</div>
+            <div class="package-coins">2.500 Xu</div>
+            <div class="package-price">200.000 đ</div>
+          </div>
+        </div>
+
+        <!-- VietQR Display -->
+        <div class="vietqr-card">
+          <div class="vietqr-img-wrapper">
+            <img src="" alt="Mã QR VietQR" class="vietqr-img" id="vietqrImg">
+          </div>
+          <div class="vietqr-info-list">
+            <div class="vietqr-info-row">
+              <span class="label">Số tiền:</span>
+              <span class="val" id="vietqrAmount" style="color:var(--accent-gold);">50.000 ₫</span>
+            </div>
+            <div class="vietqr-info-row">
+              <span class="label">Nội dung CK:</span>
+              <span class="val" id="vietqrMemo" style="color:var(--accent-cyan);">NAPXU TRUYEN8888</span>
+            </div>
+            <div class="vietqr-info-row">
+              <span class="label">Ngân hàng:</span>
+              <span class="val" id="vietqrBank">MBBank - 0399888999</span>
+            </div>
+            <div class="vietqr-info-row">
+              <span class="label">Chủ tài khoản:</span>
+              <span class="val" id="vietqrName">AI NOVEL VIETNAM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Đóng</button>
+        <button class="btn btn-primary" id="btnSimulateTopup" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Mô Phỏng Đã Chuyển Khoản (Cộng Xu Ngay)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. New Project Modal -->
+  <div class="modal-backdrop" id="newProjectModal">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Tạo Bộ Truyện Mới</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên Tác Phẩm <span style="color:var(--danger); font-weight:700;">*</span></label>
+          <input type="text" class="form-input" id="newProjectTitle" placeholder="Ví dụ: Vạn Cổ Thần Đế, Đạo Quân, Trọng Sinh Đô Thị...">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label">Thể Loại</label>
+            <select class="form-select" id="newProjectGenre">
+              <option value="xianxia">Tiên Hiệp / Tu Chân</option>
+              <option value="wuxia">Kiếm Hiệp / Võ Hiệp</option>
+              <option value="urban">Đô Thị / Dị Năng</option>
+              <option value="romance">Ngôn Tình / Trọng Sinh</option>
+              <option value="mystery">Linh Dị / Trinh Thám</option>
+              <option value="scifi">Khoa Huyễn / Mạt Thế</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bút Danh Tác Giả</label>
+            <input type="text" class="form-input" id="newProjectAuthor" value="Thiên Đạo Giả">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên Nhân Vật Chính <span style="color:var(--text-muted); font-size:0.8rem; font-weight:normal;">(Để trống AI sẽ tự động tạo)</span></label>
+          <input type="text" class="form-input" id="newProjectProtagonist" placeholder="Ví dụ: Diệp Phàm, Lâm Phong, Thẩm Triệt... (để trống sẽ tự động đặt)">
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Tên nhân vật chính sẽ được đồng bộ vào Lorebook, hệ thống quan hệ và mạch viết của Writer Agent.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bối Cảnh Tác Phẩm & Ngoại Cảnh (World Setting / Context)</label>
+          <textarea class="form-textarea" id="newProjectWorldContext" rows="3" placeholder="Mô tả bối cảnh thế giới, tông môn, lục địa, dị thế giới, thời đại... Ví dụ: Đại lục Tiên Huyền rộng lớn, Ma tông hoành hành khắp chốn; hoặc Đô thị linh khí khôi phục năm 2035, quái thú xâm lấn bờ cõi..."></textarea>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Dựa vào bối cảnh này, AI sẽ tự động thiết lập các ngoại cảnh, địa danh và nhân vật/thế lực tương ứng vào Lorebook.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tiền Đề / Ý Tưởng Cốt Truyện (Premise)</label>
+          <textarea class="form-textarea" id="newProjectPremise" rows="2" placeholder="Mô tả ngắn gọn về nghịch cảnh ban đầu và mục tiêu tối thượng của nhân vật..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Hủy</button>
+        <button class="btn btn-primary" id="btnSubmitNewProject">✨ Khởi Tạo Bộ Truyện</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. New Chapter Modal -->
+  <div class="modal-backdrop" id="newChapterModal">
+    <div class="modal-box" style="max-width:480px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          <span>Thêm Chương Mới</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tiêu Đề Chương</label>
+          <input type="text" class="form-input" id="newChapterTitle" placeholder="Ví dụ: Lôi Đình Tẩy Tủy, Luyện Khí Đột Phá...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Hủy</button>
+        <button class="btn btn-primary" id="btnSubmitNewChapter">Thêm Chương</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Diagnostics Modal (/diag) -->
+  <div class="modal-backdrop" id="diagModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Chẩn Đoán Toàn Diện Cốt Truyện (/diag)</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="diagOutput" style="font-size:0.9rem; color:var(--text-muted); background:var(--bg-primary); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); line-height:1.7; white-space:pre-wrap; max-height:400px; overflow-y:auto;">
+          Đang quét toàn bộ các chương và Lorebook...
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary modal-close">Đã Hiểu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Export Modal -->
+  <div class="modal-backdrop" id="exportModal">
+    <div class="modal-box" style="max-width:520px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Xuất Bản Tiểu Thuyết</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">
+          Chọn định dạng xuất bản mong muốn. File sẽ tự động đóng gói toàn bộ các chương truyện và metadata:
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <button class="btn btn-outline" id="btnExportTxt" style="padding:14px; justify-content:center; flex-direction:column; gap:6px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <strong>File Văn Bản (.TXT)</strong>
+            <span style="font-size:0.75rem; color:var(--text-dim);">Gọn nhẹ, đọc trên mọi thiết bị</span>
+          </button>
+          <button class="btn btn-outline" id="btnExportMd" style="padding:14px; justify-content:center; flex-direction:column; gap:6px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+            <strong>Markdown (.MD)</strong>
+            <span style="font-size:0.75rem; color:var(--text-dim);">Chuẩn định dạng Obsidian / Web</span>
+          </button>
+          <button class="btn btn-outline" id="btnExportHtml" style="padding:14px; justify-content:center; flex-direction:column; gap:6px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <strong>Web Reader (.HTML)</strong>
+            <span style="font-size:0.75rem; color:var(--text-dim);">Tích hợp giao diện đọc đêm đẹp mắt</span>
+          </button>
+          <button class="btn btn-outline" id="btnExportEpub" style="padding:14px; justify-content:center; flex-direction:column; gap:6px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            <strong>Sách Điện Tử (.EPUB)</strong>
+            <span style="font-size:0.75rem; color:var(--text-dim);">Dành cho Kindle / Apple Books</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Lorebook Character & Codex Modal -->
+  <div class="modal-backdrop" id="lorebookModal">
+    <div class="modal-box" style="max-width:540px;">
+      <div class="modal-header">
+        <div class="modal-title" id="lorebookModalTitle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Thiết Lập Hồ Sơ Lorebook</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top:14px;">
+        <input type="hidden" id="loreFormId" value="">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Tên Nhân Vật / Thực Thể *</label>
+            <input type="text" class="form-input" id="loreFormName" placeholder="Ví dụ: Diệp Trần, Liễu Như Yên...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phân Loại</label>
+            <select class="form-select" id="loreFormCategory">
+              <option value="character">Nhân vật (Character)</option>
+              <option value="faction">Thế lực / Môn phái (Faction)</option>
+              <option value="location">Địa danh / Bí cảnh (Location)</option>
+              <option value="artifact">Pháp bảo / Thần binh (Artifact)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Vai Trò</label>
+            <input type="text" class="form-input" id="loreFormRole" placeholder="Nhân vật chính, Nữ chính, Sư phụ, Phản diện...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Danh Xưng / Biệt Hiệu</label>
+            <input type="text" class="form-input" id="loreFormAliases" placeholder="Phân tách bằng dấu phẩy...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Miêu Tả Chi Tiết / Tính Cách / Ngoại Hình</label>
+          <textarea class="form-textarea" id="loreFormDesc" rows="3" placeholder="Đặc điểm nhận diện, khẩu khí, động cơ bí mật..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Thuộc Tính / Cảnh Giới / Pháp Bảo</label>
+          <input type="text" class="form-input" id="loreFormAttrs" placeholder="Ví dụ: Cảnh giới: Trúc Cơ tầng 3 | Vũ khí: Hàn Sương Kiếm">
+        </div>
+
+        <div style="background:rgba(15,23,42,0.6); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle); margin-top:10px;">
+          <label class="form-label" style="margin-bottom:6px;">Thiết Lập Mối Quan Hệ (Hiện trên Sơ đồ)</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted);">Quan hệ với nhân vật:</label>
+              <select class="form-select" id="loreFormRelTarget" style="font-size:0.82rem;">
+                <option value="">-- Chọn nhân vật liên kết --</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted);">Loại quan hệ:</label>
+              <select class="form-select" id="loreFormRelType" style="font-size:0.82rem;">
+                <option value="ally">Đồng minh / Tri kỷ</option>
+                <option value="romance">Tình cảm / Phu thê</option>
+                <option value="enemy">Kẻ thù / Tử địch</option>
+                <option value="master">Sư đồ / Tiền bối</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:8px;">
+            <input type="text" class="form-input" id="loreFormRelText" placeholder="Mô tả quan hệ cụ thể (ví dụ: Tri kỷ đồng môn, Sư phụ truyền công...)">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Hủy</button>
+        <button class="btn btn-primary" id="btnSubmitLorebookEntry">Lưu Hồ Sơ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Author Account & Cloud Storage Modal -->
+  <div class="modal-backdrop" id="accountModal">
+    <div class="modal-box" style="max-width:480px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Tài Khoản Tác Giả & Đồng Bộ Đám Mây</span>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top:14px;">
+        
+        <!-- Tabs Navigation -->
+        <div class="modal-sub-tabs" id="accountModalTabs">
+          <button class="modal-sub-tab active" data-tab="tabAuthLogin" id="btnTabLogin">Đăng Nhập</button>
+          <button class="modal-sub-tab" data-tab="tabAuthRegister" id="btnTabRegister">Đăng Ký</button>
+          <button class="modal-sub-tab" data-tab="tabUserProfile" id="btnTabProfile" style="display:none;">Hồ Sơ Tác Giả</button>
+        </div>
+
+        <!-- 1. Tab Đăng Nhập -->
+        <div class="account-tab-content" id="tabAuthLogin">
+          <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:14px;">
+            Đăng nhập để tự động lưu truyện, chương hồi và đồng bộ số dư Xu của bạn trên đám mây.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Email Tác Giả</label>
+            <input type="email" class="form-input" id="authLoginEmail" placeholder="tacgia@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật Khẩu</label>
+            <input type="password" class="form-input" id="authLoginPassword" placeholder="••••••••">
+          </div>
+          <button class="btn btn-primary" id="btnSubmitLogin" style="width:100%; padding:10px; margin-top:8px;">
+            🚀 Đăng Nhập Tài Khoản
+          </button>
+          <div style="text-align:center; margin-top:14px; font-size:0.85rem; color:var(--text-muted);">
+            Chưa có tài khoản? <a id="btnSwitchToReg" style="color:var(--accent-cyan); text-decoration:underline; cursor:pointer;">Đăng ký ngay (Nhận 50.0 Xu)</a>
+          </div>
+        </div>
+
+        <!-- 2. Tab Đăng Ký -->
+        <div class="account-tab-content" id="tabAuthRegister" style="display:none;">
+          <div style="background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.3); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:14px; font-size:0.85rem; color:#facc15;">
+            🎁 <strong>Đặc quyền tác giả mới:</strong> Tặng ngay <strong>50.0 Xu</strong> vào ví khi đăng ký thành công!
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bút Danh / Tên Tác Giả</label>
+            <input type="text" class="form-input" id="authRegName" placeholder="Ví dụ: Thiên Đạo Giả, Tiêu Dao Tử...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="authRegEmail" placeholder="tacgia@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật Khẩu (Ít nhất 6 ký tự)</label>
+            <input type="password" class="form-input" id="authRegPassword" placeholder="••••••••">
+          </div>
+          <button class="btn btn-primary" id="btnSubmitRegister" style="width:100%; padding:10px; margin-top:8px;">
+            ✨ Tạo Tài Khoản Tác Giả
+          </button>
+          <div style="text-align:center; margin-top:14px; font-size:0.85rem; color:var(--text-muted);">
+            Đã có tài khoản? <a id="btnSwitchToLog" style="color:var(--accent-cyan); text-decoration:underline; cursor:pointer;">Đăng nhập</a>
+          </div>
+        </div>
+
+        <!-- 3. Tab Hồ Sơ Tác Giả (Khi Đã Đăng Nhập) -->
+        <div class="account-tab-content" id="tabUserProfile" style="display:none;">
+          <div style="display:flex; align-items:center; gap:14px; background:var(--bg-primary); padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:16px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--accent-primary), #8b5cf6); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+              ✍️
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:1.05rem;" id="userProfileName">Tác Giả</div>
+              <div style="font-size:0.82rem; color:var(--text-muted);" id="userProfileEmail">email@example.com</div>
+            </div>
+            <div style="text-align:right;">
+              <span class="badge badge-success" style="font-size:0.75rem;">🟢 Đang Lưu Trực Tiếp Trên Cloud</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+            <div style="background:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle); text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted);">SỐ DƯ VÍ TÁC GIẢ</div>
+              <div style="font-size:1.3rem; font-weight:700; color:var(--accent-gold); margin-top:4px;" id="userProfileCoin">50.0 🪙</div>
+            </div>
+            <div style="background:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle); text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted);">TỔNG CHI TIÊU</div>
+              <div style="font-size:1.3rem; font-weight:700; color:var(--text-secondary); margin-top:4px;" id="userProfileSpent">0.0 🪙</div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button class="btn btn-secondary" id="btnSyncAllCloud" style="padding:10px; justify-content:center;">
+              🔄 Tải Lại Dữ Liệu Tủ Truyện Từ Đám Mây
+            </button>
+            <button class="btn btn-outline" id="btnUploadLocalToCloud" style="padding:10px; justify-content:center;">
+              ⬆️ Sao Lưu Tất Cả Truyện Cục Bộ Lên Đám Mây
+            </button>
+            <button class="btn btn-outline" id="btnUserSignOut" style="padding:10px; justify-content:center; color:#f87171; border-color:rgba(239,68,68,0.3); margin-top:6px;">
+              🚪 Đăng Xuất Tài Khoản
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- MODAL: WEB NOVEL READER (ĐỌC TRUYỆN TRỰC TUYẾN CHUẨN THƯƠNG MẠI) -->
+  <!-- ============================================================================== -->
+  <div class="modal-backdrop modal" id="novelReaderModal">
+    <div class="modal-box modal-dialog modal-xl" style="max-width:940px; max-height:92vh; display:flex; flex-direction:column;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-subtle); padding:16px 24px;">
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="genre-pill" id="readerModalGenre">Tiên Hiệp</span>
+            <h3 class="modal-title" id="readerModalNovelTitle" style="font-size:1.25rem;">Tên Tiểu Thuyết</h3>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-dim); margin-top:2px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+            <span>Tác giả: <strong id="readerModalAuthorName">Bút Danh</strong> • <span id="readerModalStats">Chương 1</span></span>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <!-- Reader Font Controls -->
+          <div style="display:flex; gap:4px; background:var(--bg-primary); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:2px;">
+            <button class="btn btn-sm btn-outline" id="readerBtnFontSmaller" title="Giảm cỡ chữ" style="padding:2px 8px;">A-</button>
+            <button class="btn btn-sm btn-outline" id="readerBtnFontBigger" title="Tăng cỡ chữ" style="padding:2px 8px;">A+</button>
+          </div>
+          <button class="btn btn-sm btn-primary" id="readerBtnFollowStory">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Theo Dõi</span>
+          </button>
+          <button class="modal-close" title="Đóng">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="flex:1; overflow-y:auto; padding:24px 32px; background:var(--bg-secondary);">
+        <!-- Chapter Selector Dropdown -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:12px; border-bottom:1px dashed var(--border-subtle);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Chọn Chương:</label>
+            <select class="form-select" id="readerChapterSelect" style="min-width:240px; padding:6px 12px; font-size:0.88rem;">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div style="font-size:0.82rem; color:var(--text-muted);" id="readerChapterWordCount">
+            0 chữ
+          </div>
+        </div>
+
+        <!-- Chapter Title & Body -->
+        <h2 id="readerChapterTitle" style="font-size:1.5rem; font-family:var(--font-title); color:var(--accent-gold); text-align:center; margin-bottom:24px;">
+          Chương 1: Khởi Đầu
+        </h2>
+
+        <div id="readerChapterContent" class="novel-reader-prose" style="font-size:1.05rem; line-height:1.9; color:var(--text-main); font-family:var(--font-serif, 'Merriweather', Georgia, serif); max-width:780px; margin:0 auto; white-space:pre-wrap;">
+          Nội dung chương truyện...
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; padding:12px 24px; border-top:1px solid var(--border-subtle);">
+        <button class="btn btn-secondary" id="readerBtnPrevChapter" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <span>Chương Trước</span>
+        </button>
+        <span style="font-size:0.85rem; color:var(--text-muted);" id="readerFooterProgress">Chương 1 / 1</span>
+        <button class="btn btn-secondary" id="readerBtnNextChapter" style="display:inline-flex; align-items:center; gap:6px;">
+          <span>Chương Tiếp</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- MODAL: ĐỔI BÚT DANH TÁC GIẢ -->
+  <!-- ============================================================================== -->
+  <div class="modal-backdrop modal" id="editPenNameModal">
+    <div class="modal-box modal-dialog modal-sm" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          <span>Thay Đổi Bút Danh</span>
+        </h3>
+        <button class="modal-close" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Bút danh mới của bạn</label>
+          <input type="text" class="form-input" id="inputNewPenName" placeholder="Nhập bút danh sáng tác..." maxlength="40">
+          <small style="color:var(--text-muted); font-size:0.75rem; margin-top:6px; display:block; line-height:1.5;">
+            Bút danh này sẽ hiển thị trên tất cả các tác phẩm bạn sáng tác và chia sẻ công khai trong cộng đồng Aitory.
+          </small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline modal-close">Hủy</button>
+        <button class="btn btn-primary" id="btnSaveNewPenName">Lưu Bút Danh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- MODAL: SYSTEM DIAGNOSTICS & LIVE ERROR LOGS -->
+  <!-- ============================================================================== -->
+  <div class="modal-backdrop modal" id="systemLogModal">
+    <div class="modal-box modal-dialog modal-lg" style="max-width:860px; max-height:90vh; display:flex; flex-direction:column;">
+      <div class="modal-header" style="border-bottom:1px solid var(--border-subtle); padding:16px 20px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3); color:var(--accent-cyan); width:36px; height:36px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="font-size:1.15rem; margin:0;">Nhật Ký Hệ Thống & Kiểm Tra Lỗi</h3>
+            <div style="font-size:0.78rem; color:var(--text-muted);">Theo dõi kết nối mạng KiraAI, trạng thái phản hồi và lỗi thời gian thực</div>
+          </div>
+        </div>
+        <button class="modal-close" title="Đóng">✕</button>
+      </div>
+
+      <div class="modal-body" style="flex:1; overflow-y:auto; padding:20px; background:var(--bg-secondary);">
+        <!-- Quick Action Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; background:var(--bg-primary); padding:12px 16px; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button class="btn btn-sm btn-primary" id="btnPingKiraNow" style="display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Ping Kiểm Tra KiraAI</span>
+            </button>
+            <span id="kiraPingResult" style="font-size:0.85rem; color:var(--text-muted);">Sẵn sàng kiểm tra</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sm btn-outline" id="btnCopySystemLogs" style="display:inline-flex; align-items:center; gap:5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              <span>Sao Chép Log</span>
+            </button>
+            <button class="btn btn-sm btn-outline" id="btnClearSystemLogs" style="display:inline-flex; align-items:center; gap:5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Xóa Log</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- DevTools Guidance Box -->
+        <div style="background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.2); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:16px; font-size:0.83rem; line-height:1.6;">
+          <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:4px; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>HƯỚNG DẪN KIỂM TRA LỖI NÂNG CAO TRÊN TRÌNH DUYỆT (DEVTOOLS):</span>
+          </div>
+          <ul style="margin:0; padding-left:18px; color:var(--text-secondary);">
+            <li><strong>Nhấn phím F12</strong> (hoặc tổ hợp <code>Ctrl + Shift + I</code>) trên bàn phím.</li>
+            <li>Chọn tab <strong>Console</strong>: Nơi đây sẽ tô đỏ mọi lỗi script và lỗi mạng (kèm file và dòng bị lỗi).</li>
+            <li>Chọn tab <strong>Network</strong> &rarr; lọc <strong>Fetch/XHR</strong>: Xem trực tiếp từng lần gửi dữ liệu sang máy chủ AI KiraAI (Nếu màu đỏ, bấm vào dòng đó rồi bấm tab <em>Response</em> để đọc lỗi chi tiết).</li>
+          </ul>
+        </div>
+
+        <!-- Log List Stream -->
+        <div style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:8px; display:flex; justify-content:space-between;">
+          <span>DANH SÁCH NHẬT KÝ SỰ KIỆN GẦN NHẤT:</span>
+          <span id="systemLogCount">0 sự kiện</span>
+        </div>
+        <div id="systemLogContainer" style="background:#090d16; border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:12px; font-family:monospace; font-size:0.82rem; max-height:340px; overflow-y:auto; line-height:1.7;">
+          <div style="color:var(--text-dim); text-align:center; padding:20px 0;">Đang khởi tạo nhật ký hệ thống...</div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding:12px 20px; border-top:1px solid var(--border-subtle); display:flex; justify-content:flex-end;">
+        <button class="btn btn-outline modal-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="scripts/ui/app.js"></script>
+</body>
+</html>
