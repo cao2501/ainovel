@@ -490,6 +490,11 @@ class Application {
       btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
     });
 
+    // Toggle mobile bottom nav active tabs
+    document.querySelectorAll('.mobile-bottom-nav .mobile-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
+    });
+
     // View specific updates
     if (viewName === 'profile') {
       if (!supabaseManager.currentUser) {
@@ -515,7 +520,7 @@ class Application {
   }
 
   bindViewRouter() {
-    // Navigation bar tabs
+    // Desktop Navigation bar tabs
     document.querySelectorAll('.app-nav-menu .nav-tab-btn[data-view]').forEach(btn => {
       btn.addEventListener('click', () => {
         const view = btn.getAttribute('data-view');
@@ -543,6 +548,59 @@ class Application {
     document.getElementById('navBtnPricing')?.addEventListener('click', () => scrollToSection('sectionPricing'));
     document.getElementById('navBtnFeatures')?.addEventListener('click', () => scrollToSection('sectionFeatures'));
     document.getElementById('heroBtnPricingScroll')?.addEventListener('click', () => scrollToSection('sectionPricing'));
+
+    // Mobile Bottom Navigation Bar tabs
+    document.querySelectorAll('.mobile-bottom-nav .mobile-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.getAttribute('data-view');
+        if (view === 'pricing') {
+          scrollToSection('sectionPricing');
+        } else if (view === 'account') {
+          if (supabaseManager.currentUser) {
+            this.switchView('profile');
+          } else {
+            this.openAccountModal('tabAuthLogin');
+          }
+        } else if (view) {
+          this.switchView(view);
+        }
+      });
+    });
+
+    // Studio Mobile Drawers Controls
+    const leftDrawer = document.getElementById('studioSidebarLeft');
+    const rightDrawer = document.getElementById('studioSidebarRight');
+    const drawerBackdrop = document.getElementById('studioDrawerBackdrop');
+
+    const closeDrawers = () => {
+      leftDrawer?.classList.remove('drawer-open');
+      rightDrawer?.classList.remove('drawer-open');
+      drawerBackdrop?.classList.remove('active');
+    };
+
+    document.getElementById('btnToggleLeftDrawer')?.addEventListener('click', () => {
+      rightDrawer?.classList.remove('drawer-open');
+      leftDrawer?.classList.toggle('drawer-open');
+      drawerBackdrop?.classList.toggle('active', leftDrawer?.classList.contains('drawer-open'));
+    });
+
+    document.getElementById('btnCloseLeftDrawer')?.addEventListener('click', closeDrawers);
+
+    document.getElementById('btnToggleRightDrawer')?.addEventListener('click', () => {
+      leftDrawer?.classList.remove('drawer-open');
+      rightDrawer?.classList.toggle('drawer-open');
+      drawerBackdrop?.classList.toggle('active', rightDrawer?.classList.contains('drawer-open'));
+    });
+
+    document.getElementById('btnCloseRightDrawer')?.addEventListener('click', closeDrawers);
+    drawerBackdrop?.addEventListener('click', closeDrawers);
+
+    // Auto-close left drawer on mobile when clicking a chapter in the list
+    document.getElementById('studioChapterList')?.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992 && (e.target.closest('.chapter-item') || e.target.closest('.chapter-title-row'))) {
+        closeDrawers();
+      }
+    });
 
     // Hero CTA buttons
     document.getElementById('heroBtnStartWriting')?.addEventListener('click', () => {
@@ -1475,9 +1533,12 @@ class Application {
       dropdownMenu.style.display = user ? '' : 'none';
     }
 
+    const mobNavAccountLabel = document.getElementById('mobNavAccountLabel');
+
     if (user) {
       if (dot) dot.className = 'status-dot dot-online';
       if (btnText) btnText.textContent = profile?.display_name || user.email.split('@')[0];
+      if (mobNavAccountLabel) mobNavAccountLabel.textContent = 'Hồ Sơ';
       if (tabProfile) tabProfile.style.display = 'block';
       if (tabLogin) tabLogin.style.display = 'none';
       if (tabRegister) tabRegister.style.display = 'none';
@@ -1503,6 +1564,7 @@ class Application {
     } else {
       if (dot) dot.className = 'status-dot dot-offline';
       if (btnText) btnText.textContent = 'Đăng Nhập';
+      if (mobNavAccountLabel) mobNavAccountLabel.textContent = 'Tài Khoản';
       if (tabProfile) tabProfile.style.display = 'none';
       if (tabLogin) tabLogin.style.display = 'block';
       if (tabRegister) tabRegister.style.display = 'block';

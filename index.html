@@ -750,13 +750,14 @@
 
     <!-- Studio Top Bar for Quick Navigation -->
     <div class="studio-sub-header">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <button class="btn btn-sm btn-outline" id="btnStudioBackToHome">← Về Trang Chủ</button>
+      <div class="studio-sub-header-left">
+        <button class="btn btn-sm btn-outline" id="btnStudioBackToHome">← Trang Chủ</button>
         <button class="btn btn-sm btn-secondary" id="btnStudioOpenLibrary">📚 Tủ Truyện</button>
-        <span style="color:var(--text-muted); font-size:0.85rem;">|</span>
-        <span style="font-weight:600; font-size:0.9rem;" id="studioTopBarTitle">Đang viết tác phẩm...</span>
+        <button class="btn btn-sm btn-outline btn-mobile-drawer" id="btnToggleLeftDrawer" title="Xem Mục lục chương & Lorebook">📑 Mục Lục</button>
+        <span class="desktop-only-divider" style="color:var(--text-muted); font-size:0.85rem;">|</span>
+        <span class="studio-active-title" id="studioTopBarTitle">Đang viết tác phẩm...</span>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
+      <div class="studio-sub-header-right">
         <!-- /diag Story Diagnostics -->
         <button class="btn btn-sm btn-outline" id="btnStudioDiag" title="Chẩn đoán mâu thuẫn cốt truyện /diag">
           🔍 /diag
@@ -765,6 +766,7 @@
         <button class="btn btn-sm btn-outline" id="btnStudioExport" title="Xuất bản tiểu thuyết TXT / EPUB / HTML">
           📥 Xuất Bản
         </button>
+        <button class="btn btn-sm btn-primary btn-mobile-drawer" id="btnToggleRightDrawer" title="Mở bảng điều khiển AI">🤖 AI Agent</button>
       </div>
     </div>
 
@@ -772,7 +774,11 @@
     <main class="studio-layout" id="studioLayout">
 
     <!-- Column 1: Left Navigator Sidebar -->
-    <aside class="studio-sidebar-left">
+    <aside class="studio-sidebar-left" id="studioSidebarLeft">
+      <div class="drawer-mobile-header">
+        <span>📑 MỤC LỤC & LOREBOOK</span>
+        <button class="btn-drawer-close" id="btnCloseLeftDrawer" title="Đóng danh sách">✕</button>
+      </div>
       <div class="sidebar-tabs">
         <button class="sidebar-tab-btn active" data-tab="paneChapters">📑 Chương Hồi</button>
         <button class="sidebar-tab-btn" data-tab="paneLorebook">👤 Lorebook</button>
@@ -896,7 +902,11 @@
     </section>
 
     <!-- Column 3: Right Multi-Agent Studio & 7D Evaluation -->
-    <aside class="studio-sidebar-right">
+    <aside class="studio-sidebar-right" id="studioSidebarRight">
+      <div class="drawer-mobile-header">
+        <span>🤖 TRỢ LÝ AI & THẨM ĐỊNH</span>
+        <button class="btn-drawer-close" id="btnCloseRightDrawer" title="Đóng bảng điều khiển AI">✕</button>
+      </div>
       <div class="sidebar-tabs">
         <button class="sidebar-tab-btn active" data-tab="paneActivity">🤖 Đa Agent</button>
         <button class="sidebar-tab-btn" data-tab="pane7D">⚖️ Thẩm Định 7D</button>
@@ -967,6 +977,9 @@ Nhấn "Đánh Giá Ngay" để Editor Agent phân tích chi tiết từng hạt
         </div>
       </div>
     </aside>
+
+    <!-- Backdrop overlay for mobile drawers -->
+    <div class="studio-drawer-backdrop" id="studioDrawerBackdrop"></div>
 
   </main>
   </section>
@@ -1570,7 +1583,33 @@ Nhấn "Đánh Giá Ngay" để Editor Agent phân tích chi tiết từng hạt
         <button class="btn btn-outline modal-close">Đóng</button>
       </div>
     </div>
-  </div>
+  <!-- ============================================================================== -->
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Hiển thị cố định trên điện thoại màn hình <= 768px) -->
+  <!-- ============================================================================== -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Điều hướng di động">
+    <button class="mobile-nav-item active" data-view="home" id="mobNavHome">
+      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="mob-nav-label">Trang Chủ</span>
+    </button>
+    <button class="mobile-nav-item" data-view="library" id="mobNavLibrary">
+      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+      <span class="mob-nav-label">Tủ Truyện</span>
+    </button>
+    <button class="mobile-nav-item mob-nav-studio-btn" data-view="studio" id="mobNavStudio">
+      <div class="mob-studio-icon-glow">
+        <svg class="mob-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+      </div>
+      <span class="mob-nav-label">Studio</span>
+    </button>
+    <button class="mobile-nav-item" data-view="pricing" id="mobNavPricing">
+      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/></svg>
+      <span class="mob-nav-label">Bảng Giá</span>
+    </button>
+    <button class="mobile-nav-item" data-view="account" id="mobNavAccount">
+      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="mob-nav-label" id="mobNavAccountLabel">Tài Khoản</span>
+    </button>
+  </nav>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>

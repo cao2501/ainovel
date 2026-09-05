@@ -561,3 +561,204 @@
 /* Keyframe animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ==============================================================================
+   STUDIO MOBILE RESPONSIVE SYSTEM (DRAWER MODE & TOUCH OPTIMIZATIONS)
+   ============================================================================== */
+
+.btn-mobile-drawer {
+  display: none;
+}
+
+.drawer-mobile-header {
+  display: none;
+}
+
+.studio-drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1190;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.studio-drawer-backdrop.active {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.studio-sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.studio-sub-header-left,
+.studio-sub-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 992px) {
+  .btn-mobile-drawer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .drawer-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.45);
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+  }
+
+  .btn-drawer-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
+    font-size: 1.1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-drawer-close:active {
+    background: rgba(239, 68, 68, 0.3);
+  }
+
+  .studio-layout {
+    display: block !important;
+    position: relative;
+    height: calc(100vh - 120px) !important;
+    overflow: hidden;
+  }
+
+  /* Left Drawer: Chapters / Lorebook */
+  .studio-sidebar-left {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 86vw;
+    max-width: 340px;
+    height: 100vh;
+    z-index: 1200;
+    transform: translateX(-105%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.85);
+  }
+
+  .studio-sidebar-left.drawer-open {
+    transform: translateX(0);
+  }
+
+  /* Right Drawer: AI Agents & 7D */
+  .studio-sidebar-right {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 88vw;
+    max-width: 360px;
+    height: 100vh;
+    z-index: 1200;
+    transform: translateX(105%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -6px 0 32px rgba(0, 0, 0, 0.85);
+  }
+
+  .studio-sidebar-right.drawer-open {
+    transform: translateX(0);
+  }
+
+  /* Central Canvas */
+  .studio-canvas {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .canvas-header {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chapter-title-input {
+    width: 100%;
+    font-size: 1.1rem;
+  }
+
+  #btnZenMode {
+    display: none;
+  }
+
+  .canvas-body {
+    padding: 14px 14px 70px;
+  }
+
+  .novel-textarea {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    min-height: 380px;
+  }
+
+  .canvas-statusbar {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .statusbar-group {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .studio-sub-header {
+    padding: 6px 10px;
+  }
+
+  .desktop-only-divider {
+    display: none;
+  }
+
+  .studio-active-title {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+
+  #btnStudioDiag span,
+  #btnStudioExport span {
+    display: none;
+  }
+}
+

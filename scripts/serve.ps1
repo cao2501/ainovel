@@ -29,6 +29,8 @@ while ($listener.IsListening) {
             ".js"   { $response.ContentType = "application/javascript; charset=utf-8" }
             ".json" { $response.ContentType = "application/json; charset=utf-8" }
             ".png"  { $response.ContentType = "image/png" }
+            ".jpg"  { $response.ContentType = "image/jpeg" }
+            ".jpeg" { $response.ContentType = "image/jpeg" }
             ".svg"  { $response.ContentType = "image/svg+xml" }
             default { $response.ContentType = "application/octet-stream" }
         }
