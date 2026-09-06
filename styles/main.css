@@ -2031,87 +2031,179 @@ html, body {
 }
 
 /* ------------------------------------------------------------------------------
-   Mobile Bottom Navigation Bar
+   Mobile Navigation Drawer (Kéo ra khi bấm Logo trên điện thoại)
+   CHỈ chứa đúng 5 chức năng theo ảnh người dùng cung cấp
    ------------------------------------------------------------------------------ */
-.mobile-bottom-nav {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: rgba(9, 13, 22, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border-subtle);
-  z-index: 1050;
-  padding: 0 8px;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  justify-content: space-around;
+.brand-logo-wrapper {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
 }
 
-.mobile-nav-item {
-  flex: 1;
+.mobile-menu-indicator {
+  display: none;
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+  background: var(--accent-gold);
+  color: #070a12;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
+  border: 1px solid #070a12;
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 270px;
+  max-width: 82vw;
+  background: rgba(10, 15, 28, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(234, 179, 8, 0.35);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.85);
+  z-index: 2200;
+  transform: translateX(-105%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  padding: 18px 14px;
+}
+
+.mobile-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-backdrop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.drawer-backdrop-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 16px;
+}
+
+.drawer-brand-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drawer-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-gold);
+}
+
+.drawer-brand-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-title {
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+
+.drawer-subtitle {
+  font-size: 0.65rem;
+  color: var(--accent-gold);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.drawer-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  padding: 6px 0;
-  gap: 3px;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.mobile-nav-item:hover,
-.mobile-nav-item:active {
+.drawer-close-btn:active {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.drawer-nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.drawer-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
 }
 
-.mobile-nav-item.active {
+.drawer-nav-link:hover,
+.drawer-nav-link:active {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.3);
   color: var(--accent-gold);
 }
 
-.mobile-nav-item.active .mob-nav-icon {
-  stroke: var(--accent-gold);
-  transform: scale(1.1);
+.drawer-nav-link.active {
+  background: rgba(234, 179, 8, 0.18);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
-.mob-nav-icon {
-  transition: transform 0.2s ease, stroke 0.2s ease;
-}
-
-.mob-nav-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* Elevated Studio Center Button in Mobile Nav */
-.mob-nav-studio-btn .mob-studio-icon-glow {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
-  display: flex;
-  align-items: center;
+.drawer-item-icon {
+  font-size: 1.2rem;
+  width: 24px;
+  display: inline-flex;
   justify-content: center;
-  color: #050811;
-  box-shadow: 0 0 16px rgba(234, 179, 8, 0.45);
-  margin-top: -16px;
-  border: 2px solid var(--bg-primary);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.mobile-nav-item.active.mob-nav-studio-btn .mob-studio-icon-glow {
-  transform: scale(1.1);
-  box-shadow: 0 0 22px rgba(234, 179, 8, 0.7);
+.drawer-item-label {
+  flex: 1;
 }
 
 /* ------------------------------------------------------------------------------
@@ -2154,14 +2246,7 @@ html, body {
    Breakpoints: 768px and below (Smartphones Standard & Portrait)
    ------------------------------------------------------------------------------ */
 @media (max-width: 768px) {
-  /* Show mobile bottom nav and add bottom padding to views */
-  .mobile-bottom-nav {
-    display: flex;
-  }
-
-  .app-view {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-  }
+  /* Header adjustments: Hide desktop nav row, open Drawer via Logo */
 
   /* Header adjustments: Hide desktop nav row */
   .app-header {

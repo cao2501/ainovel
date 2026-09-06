@@ -31,7 +31,27 @@ class Application {
     this.updateWalletDisplay();
     this.updateProjectsBadge();
     this.studio.init();
-    this.switchView('home');
+
+    // Auto-restore previous render / project / view session
+    const session = storage.getSessionState();
+    const hash = window.location.hash.replace('#', '');
+    let targetView = 'home';
+
+    if (['home', 'library', 'studio', 'profile'].includes(hash)) {
+      targetView = hash;
+    } else if (session.view && ['home', 'library', 'studio', 'profile'].includes(session.view)) {
+      targetView = session.view;
+    }
+
+    if (session.projectId) {
+      storage.setActiveProjectId(session.projectId);
+      this.studio.loadActiveProject();
+      if (session.chapterId) {
+        this.studio.selectChapter(session.chapterId);
+      }
+    }
+
+    this.switchView(targetView);
     await this.initSupabase();
 
     // Welcome message
@@ -470,6 +490,23 @@ class Application {
     }
   }
 
+  toggleMobileNavDrawer() {
+    const drawer = document.getElementById('mobileNavDrawer');
+    const backdrop = document.getElementById('mobileNavBackdrop');
+    const isOpen = drawer?.classList.contains('open');
+    if (isOpen) {
+      this.closeMobileNavDrawer();
+    } else {
+      drawer?.classList.add('open');
+      backdrop?.classList.add('active');
+    }
+  }
+
+  closeMobileNavDrawer() {
+    document.getElementById('mobileNavDrawer')?.classList.remove('open');
+    document.getElementById('mobileNavBackdrop')?.classList.remove('active');
+  }
+
   switchView(viewName) {
     this.currentView = viewName;
 
@@ -485,15 +522,23 @@ class Application {
       targetView.classList.add('active');
     }
 
-    // Toggle nav active tabs
+    // Toggle nav active tabs on desktop
     document.querySelectorAll('.app-nav-menu .nav-tab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
     });
 
-    // Toggle mobile bottom nav active tabs
-    document.querySelectorAll('.mobile-bottom-nav .mobile-nav-item').forEach(btn => {
+    // Toggle nav active tabs on mobile drawer
+    document.querySelectorAll('.drawer-nav-link').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
     });
+
+    // Update URL hash without jumping
+    if (window.location.hash !== '#' + viewName) {
+      history.replaceState(null, '', '#' + viewName);
+    }
+
+    // Save view to persistent session state
+    storage.saveSessionState({ view: viewName });
 
     // View specific updates
     if (viewName === 'profile') {
@@ -528,9 +573,44 @@ class Application {
       });
     });
 
-    // Brand logo returns to home
-    document.getElementById('brandHomeLink')?.addEventListener('click', () => {
+    // Brand logo: Click on mobile (<= 768px) opens Mobile Drawer; click on desktop goes home
+    document.getElementById('brandHomeLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.innerWidth <= 768) {
+        this.toggleMobileNavDrawer();
+      } else {
+        this.switchView('home');
+      }
+    });
+
+    // Mobile Navigation Drawer Close controls
+    document.getElementById('btnCloseNavDrawer')?.addEventListener('click', () => {
+      this.closeMobileNavDrawer();
+    });
+    document.getElementById('mobileNavBackdrop')?.addEventListener('click', () => {
+      this.closeMobileNavDrawer();
+    });
+
+    // Mobile Navigation Drawer 5 Core Items
+    document.getElementById('drawerBtnHome')?.addEventListener('click', () => {
       this.switchView('home');
+      this.closeMobileNavDrawer();
+    });
+    document.getElementById('drawerBtnLibrary')?.addEventListener('click', () => {
+      this.switchView('library');
+      this.closeMobileNavDrawer();
+    });
+    document.getElementById('drawerBtnStudio')?.addEventListener('click', () => {
+      this.switchView('studio');
+      this.closeMobileNavDrawer();
+    });
+    document.getElementById('drawerBtnPricing')?.addEventListener('click', () => {
+      scrollToSection('sectionPricing');
+      this.closeMobileNavDrawer();
+    });
+    document.getElementById('drawerBtnFeatures')?.addEventListener('click', () => {
+      scrollToSection('sectionFeatures');
+      this.closeMobileNavDrawer();
     });
 
     // Pricing & Features navigation shortcuts
@@ -549,22 +629,12 @@ class Application {
     document.getElementById('navBtnFeatures')?.addEventListener('click', () => scrollToSection('sectionFeatures'));
     document.getElementById('heroBtnPricingScroll')?.addEventListener('click', () => scrollToSection('sectionPricing'));
 
-    // Mobile Bottom Navigation Bar tabs
-    document.querySelectorAll('.mobile-bottom-nav .mobile-nav-item').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const view = btn.getAttribute('data-view');
-        if (view === 'pricing') {
-          scrollToSection('sectionPricing');
-        } else if (view === 'account') {
-          if (supabaseManager.currentUser) {
-            this.switchView('profile');
-          } else {
-            this.openAccountModal('tabAuthLogin');
-          }
-        } else if (view) {
-          this.switchView(view);
-        }
-      });
+    // Browser URL hash changes (back/forward button support)
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && hash !== this.currentView && ['home', 'library', 'studio', 'profile'].includes(hash)) {
+        this.switchView(hash);
+      }
     });
 
     // Studio Mobile Drawers Controls

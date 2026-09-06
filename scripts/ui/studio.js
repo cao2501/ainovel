@@ -197,9 +197,16 @@ export class StudioController {
 
     const chapters = this.activeProject.chapters || [];
     if (chapters.length > 0) {
-      // Khi đã có chương: tự động hiển thị chương cuối cùng
-      const lastChapter = chapters[chapters.length - 1];
-      this.selectChapter(lastChapter.id);
+      // Tự động khôi phục chương cuối cùng hoặc chương đang mở từ sessionState
+      const sessionState = storage.getSessionState();
+      let targetChapter = null;
+      if (sessionState && sessionState.chapterId && sessionState.projectId === this.activeProject.id) {
+        targetChapter = chapters.find(c => c.id === sessionState.chapterId);
+      }
+      if (!targetChapter) {
+        targetChapter = chapters[chapters.length - 1];
+      }
+      this.selectChapter(targetChapter.id);
     } else {
       // Khi chưa có chương nào: làm sạch canvas và hiển thị trạng thái chờ viết
       this.activeChapter = null;
@@ -348,6 +355,13 @@ export class StudioController {
     this.updateWordCount();
     this.hideGhostText();
     this.renderChapterList();
+
+    // Lưu session state để khôi phục chính xác lần sau mở lại
+    storage.saveSessionState({
+      view: 'studio',
+      projectId: this.activeProject.id,
+      chapterId: chapter.id
+    });
   }
 
   handleEditorInput() {
@@ -776,6 +790,11 @@ export class StudioController {
     }
 
     storage.saveProject(this.activeProject);
+    storage.saveSessionState({
+      view: 'studio',
+      projectId: this.activeProject.id,
+      chapterId: this.activeChapter?.id
+    });
     this.dom.saveStatusTag.textContent = `Đã lưu lúc ${new Date().toLocaleTimeString('vi-VN')}`;
   }
 

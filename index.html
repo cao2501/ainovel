@@ -46,9 +46,12 @@
   <!-- Global Commercial Navigation Bar -->
   <header class="app-header">
     <div class="header-container">
-      <!-- Brand Logo -->
-      <a class="logo-brand" id="brandHomeLink" title="Về Trang Chủ Aitory" href="#home">
-        <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
+      <!-- Brand Logo (Nhấn vào trên mobile để mở Navigation Drawer) -->
+      <a class="logo-brand" id="brandHomeLink" title="Menu Chức Năng Aitory" href="javascript:void(0)">
+        <div class="brand-logo-wrapper">
+          <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
+          <span class="mobile-menu-indicator" title="Mở menu">☰</span>
+        </div>
         <div class="brand-text-col">
           <div class="logo-title">AITORY</div>
           <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
@@ -124,6 +127,48 @@
       </div>
     </div>
   </header>
+
+  <!-- ============================================================================== -->
+  <!-- MOBILE NAVIGATION DRAWER (Mở ra khi chạm vào Logo trên điện thoại) -->
+  <!-- CHỈ chứa đúng 5 chức năng theo yêu cầu người dùng -->
+  <!-- ============================================================================== -->
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Menu chức năng mobile">
+    <div class="drawer-top-bar">
+      <div class="drawer-brand-identity">
+        <img src="assets/logo.jpg" alt="Aitory Logo" class="drawer-logo-img" width="36" height="36">
+        <div class="drawer-brand-col">
+          <span class="drawer-title">AITORY</span>
+          <span class="drawer-subtitle">NOVEL STUDIO</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="btnCloseNavDrawer" title="Đóng menu">✕</button>
+    </div>
+
+    <!-- 5 Chức Năng Cốt Lõi Duy Nhất -->
+    <nav class="drawer-nav-menu">
+      <button class="drawer-nav-link active" data-view="home" id="drawerBtnHome">
+        <span class="drawer-item-icon">🏠</span>
+        <span class="drawer-item-label">Trang Chủ</span>
+      </button>
+      <button class="drawer-nav-link" data-view="library" id="drawerBtnLibrary">
+        <span class="drawer-item-icon">📄</span>
+        <span class="drawer-item-label">Tủ Truyện Cộng Đồng</span>
+      </button>
+      <button class="drawer-nav-link" data-view="studio" id="drawerBtnStudio">
+        <span class="drawer-item-icon">🖋️</span>
+        <span class="drawer-item-label">Studio Sáng Tác</span>
+      </button>
+      <button class="drawer-nav-link" data-view="pricing" id="drawerBtnPricing">
+        <span class="drawer-item-icon">💲</span>
+        <span class="drawer-item-label">Bảng Giá</span>
+      </button>
+      <button class="drawer-nav-link" data-view="features" id="drawerBtnFeatures">
+        <span class="drawer-item-icon">⚡</span>
+        <span class="drawer-item-label">Tính Năng</span>
+      </button>
+    </nav>
+  </aside>
+  <div class="drawer-backdrop-overlay" id="mobileNavBackdrop"></div>
 
   <!-- ============================================================================== -->
   <!-- 1. VIEW HOME: GLOBAL COMMERCIAL NOVEL LANDING PAGE -->
@@ -1583,33 +1628,7 @@ Nhấn "Đánh Giá Ngay" để Editor Agent phân tích chi tiết từng hạt
         <button class="btn btn-outline modal-close">Đóng</button>
       </div>
     </div>
-  <!-- ============================================================================== -->
-  <!-- MOBILE BOTTOM NAVIGATION BAR (Hiển thị cố định trên điện thoại màn hình <= 768px) -->
-  <!-- ============================================================================== -->
-  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Điều hướng di động">
-    <button class="mobile-nav-item active" data-view="home" id="mobNavHome">
-      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="mob-nav-label">Trang Chủ</span>
-    </button>
-    <button class="mobile-nav-item" data-view="library" id="mobNavLibrary">
-      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-      <span class="mob-nav-label">Tủ Truyện</span>
-    </button>
-    <button class="mobile-nav-item mob-nav-studio-btn" data-view="studio" id="mobNavStudio">
-      <div class="mob-studio-icon-glow">
-        <svg class="mob-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-      </div>
-      <span class="mob-nav-label">Studio</span>
-    </button>
-    <button class="mobile-nav-item" data-view="pricing" id="mobNavPricing">
-      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/></svg>
-      <span class="mob-nav-label">Bảng Giá</span>
-    </button>
-    <button class="mobile-nav-item" data-view="account" id="mobNavAccount">
-      <svg class="mob-nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="mob-nav-label" id="mobNavAccountLabel">Tài Khoản</span>
-    </button>
-  </nav>
+  </div>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>

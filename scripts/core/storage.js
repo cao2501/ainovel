@@ -203,6 +203,25 @@ export class StorageEngine {
 
   setActiveProjectId(id) {
     localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT, id);
+    this.saveSessionState({ projectId: id });
+  }
+
+  saveSessionState(state) {
+    try {
+      const current = this.getSessionState();
+      const updated = { ...current, ...state, lastUpdated: Date.now() };
+      localStorage.setItem('ainovel_last_session_state', JSON.stringify(updated));
+    } catch (e) {
+      console.warn('saveSessionState error:', e);
+    }
+  }
+
+  getSessionState() {
+    try {
+      return JSON.parse(localStorage.getItem('ainovel_last_session_state')) || {};
+    } catch {
+      return {};
+    }
   }
 
   getActiveProject() {
@@ -263,6 +282,16 @@ export class StorageEngine {
       ? protagonistName.trim() 
       : (starterLore.find(l => l.role?.includes('chính'))?.name || 'Nhân vật chính');
 
+    const firstChap = {
+      id: 'chap_' + Date.now(),
+      chapterIndex: 1,
+      title: 'Chương 1: Mở Đầu',
+      summary: premise || 'Khởi đầu hành trình mới',
+      content: `Chương 1: Mở Đầu\n\n${premise ? premise + '\n\n' : ''}`,
+      wordCount: (premise ? premise.split(/\s+/).length + 4 : 4),
+      updatedAt: new Date().toISOString()
+    };
+
     const newProj = {
       id: 'proj_' + Date.now(),
       title: title || 'Bộ Tiểu Thuyết Mới',
@@ -283,13 +312,18 @@ export class StorageEngine {
       },
       lorebook: starterLore,
       rollingOutlines: [],
-      chapters: []
+      chapters: [firstChap]
     };
 
     const projects = this.getProjects();
     projects.unshift(newProj);
     this.saveProjects(projects);
     this.setActiveProjectId(newProj.id);
+    this.saveSessionState({
+      view: 'studio',
+      projectId: newProj.id,
+      chapterId: firstChap.id
+    });
 
     // Đồng bộ truyện mới lên Supabase Cloud
     if (supabaseManager.isConfigured() && supabaseManager.currentUser) {
