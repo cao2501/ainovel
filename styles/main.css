@@ -1890,10 +1890,19 @@ textarea:focus-visible {
 }
 
 /* ================================================================
-   Responsive Navigation & Viewport Adjustments
+   Responsive Navigation: 4-Tier Fluid Responsive System
+   Thu phóng nhịp nhàng, bảo toàn tuyệt đối 5 tab không bao giờ bị cắt chữ
    ================================================================ */
 
-/* 1440px and below: Tighten spacing */
+/* Default states for responsive text helpers */
+.nav-text-short {
+  display: none;
+}
+.nav-text-full {
+  display: inline;
+}
+
+/* Tier 1.5: 1440px and below - fine-tune gaps */
 @media (max-width: 1440px) {
   .header-container {
     padding: 0 16px;
@@ -1901,73 +1910,88 @@ textarea:focus-visible {
   }
 
   .nav-tab-btn {
-    padding: 5px 10px;
+    padding: 6px 11px;
+    font-size: 0.82rem;
+    gap: 5px;
+  }
+}
+
+/* Tier 2: 1380px and below (Laptops & Narrowed Windows)
+   Thu gọn thông minh các công cụ phụ & chữ phụ để giải phóng ~350px không gian,
+   giữ cho 5 tab ở giữa luôn hiển thị đầy đủ 100%, không bao giờ bị cắt chữ */
+@media (max-width: 1380px) {
+  .header-container {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  /* 1. Rút gọn nhãn phụ của Logo để tiết kiệm không gian */
+  .logo-subtitle {
+    display: none;
+  }
+
+  /* 2. Rút gọn "Tủ Truyện Cộng Đồng" thành "Tủ Truyện" */
+  .nav-text-full {
+    display: none;
+  }
+  .nav-text-short {
+    display: inline;
+  }
+
+  /* 3. Tối ưu khoảng cách và kích thước thanh 5 tab giữa */
+  .app-nav-menu {
+    gap: 3px;
+    padding: 3px;
+    flex-shrink: 0;
+  }
+
+  .nav-tab-btn {
+    padding: 6px 9px;
     font-size: 0.8rem;
     gap: 5px;
   }
 
-  .header-actions {
-    gap: 6px;
-  }
-
-  .header-cta-btn,
-  .header-tool-btn,
-  .cloud-account-btn {
-    padding: 5px 8px;
-    font-size: 0.78rem;
-  }
-
-  .coin-badge {
-    padding: 4px 10px;
-    font-size: 0.82rem;
-    gap: 6px;
-  }
-}
-
-/* 1100px and below: Hide text labels on action buttons, keep icons */
-@media (max-width: 1100px) {
-  .header-container {
-    padding: 0 10px;
-    gap: 8px;
-  }
-
-  .nav-tab-btn {
-    padding: 5px 8px;
-    font-size: 0.76rem;
-    gap: 4px;
-  }
-
-  /* Hide text labels on header action buttons, only show SVG icons */
-  .header-cta-btn span,
+  /* 4. Thu gọn các nút công cụ bên phải (chuyển chữ thành biểu tượng có tooltip) */
   .header-tool-btn span,
-  .cloud-account-btn #accountBtnText {
+  .header-cta-btn span {
     display: none;
   }
 
-  .header-cta-btn,
   .header-tool-btn,
-  .cloud-account-btn {
-    padding: 6px;
-    min-width: 32px;
-    min-height: 32px;
+  .header-cta-btn {
+    padding: 6px 8px;
+    min-width: 34px;
+    min-height: 34px;
     justify-content: center;
+  }
+
+  /* 5. Thu gọn huy hiệu Ví Xu */
+  .coin-plus-tag {
+    display: none;
   }
 
   .coin-badge {
     padding: 4px 8px;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     gap: 4px;
   }
 
-  .coin-plus-tag {
-    display: none;
+  /* 6. Thu gọn nút tài khoản */
+  .cloud-account-btn {
+    padding: 5px 8px;
+  }
+
+  .cloud-account-btn #accountBtnText {
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-/* ------------------------------------------------------------------------------
-   Adaptive Navigation: Khi màn hình không đủ chỗ chứa thanh ngang (<= 1180px)
-   Tự động chuyển thẳng sang dạng Hamburger + Navigation Drawer (KHÔNG ngắt thành 2 dòng)
-   ------------------------------------------------------------------------------ */
+/* Tier 3: 1180px and below (Tablet / Cửa Sổ Hẹp)
+   Khi màn hình không đủ chỗ hiển thị 5 tab một cách thoải mái,
+   chuyển thẳng sang Navigation Drawer và nút Hamburger kính mờ (1 hàng duy nhất) */
 @media (max-width: 1180px) {
   .app-header {
     height: var(--header-height);
@@ -1978,10 +2002,10 @@ textarea:focus-visible {
   .header-container {
     flex-wrap: nowrap !important;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
   }
 
-  /* Ẩn hoàn toàn thanh ngang để tránh vỡ thành 2 dòng */
+  /* Ẩn hoàn toàn thanh ngang để tránh vỡ layout */
   .app-nav-menu {
     display: none !important;
   }
@@ -1994,7 +2018,7 @@ textarea:focus-visible {
   .brand-header-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 }
 
