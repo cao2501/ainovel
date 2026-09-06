@@ -4,9 +4,9 @@
  */
 
 export const KIRA_CONFIG = {
+  // Cổng máy chủ proxy bảo mật qua Supabase Edge Functions (Không để lộ API Key trên client)
+  PROXY_URL: 'https://dvshqrgisreepbwrexdl.supabase.co/functions/v1/kira-proxy',
   DEFAULT_BASE_URL: 'https://kiraai.vn/api/v1/chat/completions',
-  // API Key do chủ trang web cung cấp sẵn cho toàn bộ hệ thống (User chỉ cần dùng Xu)
-  SYSTEM_API_KEY: 'kira_5ce16c4ec25b8613d9aedeb2eff2f578',
   MODELS: [
     {
       id: 'qwen3.8-flash',

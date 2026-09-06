@@ -4,3 +4,5 @@ Thumbs.db
 .vscode/
 .idea/
 temp_ainovel_cli/
+scratch/
+.env*

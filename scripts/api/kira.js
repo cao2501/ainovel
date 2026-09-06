@@ -9,12 +9,12 @@ import { appLogger } from '../core/logger.js';
 
 export class KiraAPIClient {
   constructor(apiKey = '', baseUrl = KIRA_CONFIG.DEFAULT_BASE_URL) {
-    this.apiKey = apiKey || KIRA_CONFIG.SYSTEM_API_KEY || '';
-    this.baseUrl = baseUrl;
+    this.apiKey = apiKey ? apiKey.trim() : '';
+    this.baseUrl = baseUrl || KIRA_CONFIG.DEFAULT_BASE_URL;
   }
 
   setApiKey(key) {
-    this.apiKey = key ? key.trim() : (KIRA_CONFIG.SYSTEM_API_KEY || '');
+    this.apiKey = key ? key.trim() : '';
   }
 
   setBaseUrl(url) {
@@ -22,7 +22,7 @@ export class KiraAPIClient {
   }
 
   /**
-   * Send Chat Completion request to KiraAI
+   * Send Chat Completion request to KiraAI (qua Proxy bảo mật hoặc BYOK)
    * Supports both real-time streaming and batch completion
    */
   async chatCompletion({
@@ -37,9 +37,9 @@ export class KiraAPIClient {
   }) {
     const startTime = performance.now();
 
-    // Check if API key is provided
-    if (!this.apiKey || this.apiKey === 'YOUR_KIRA_API_KEY') {
-      throw new Error('Chưa thiết lập SYSTEM_API_KEY từ máy chủ! Vui lòng điền API Key vào file scripts/config.js hoặc trong Cài đặt.');
+    // Check if proxy or custom BYOK key is available
+    if (!this.apiKey && !KIRA_CONFIG.PROXY_URL) {
+      throw new Error('Chưa thiết lập Cổng bảo mật Proxy hoặc API Key! Vui lòng cấu hình PROXY_URL.');
     }
 
     const payload = {
@@ -50,15 +50,24 @@ export class KiraAPIClient {
       stream: Boolean(stream)
     };
 
+    // Khi không có custom key, tự động gọi qua Edge Function Proxy bảo mật
+    const isUsingProxy = !this.apiKey && Boolean(KIRA_CONFIG.PROXY_URL);
+    const targetUrl = isUsingProxy ? KIRA_CONFIG.PROXY_URL : this.baseUrl;
+
+    const requestHeaders = {
+      'Content-Type': 'application/json'
+    };
+
+    if (this.apiKey) {
+      requestHeaders['Authorization'] = `Bearer ${this.apiKey}`;
+    }
+
     try {
       let response;
       try {
-        response = await fetch(this.baseUrl, {
+        response = await fetch(targetUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.apiKey}`
-          },
+          headers: requestHeaders,
           body: JSON.stringify(payload),
           signal
         });
@@ -66,14 +75,11 @@ export class KiraAPIClient {
         if (fetchErr.name === 'AbortError' || (signal && signal.aborted)) {
           throw fetchErr;
         }
-        console.warn('KiraAI fetch encountered network hitch, retrying once...', fetchErr);
+        console.warn('AI fetch encountered network hitch, retrying once...', fetchErr);
         await new Promise(res => setTimeout(res, 1200));
-        response = await fetch(this.baseUrl, {
+        response = await fetch(targetUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.apiKey}`
-          },
+          headers: requestHeaders,
           body: JSON.stringify(payload),
           signal
         });
@@ -202,8 +208,8 @@ export class KiraAPIClient {
    * Test connection to KiraAI API with a lightweight ping
    */
   async testConnection(model = 'qwen3.8-flash') {
-    if (!this.apiKey) {
-      return { success: false, message: 'Chưa nhập API Key.' };
+    if (!this.apiKey && !KIRA_CONFIG.PROXY_URL) {
+      return { success: false, message: 'Chưa cấu hình Cổng proxy bảo mật hoặc API Key.' };
     }
 
     try {
