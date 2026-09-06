@@ -2031,65 +2031,90 @@ html, body {
 }
 
 /* ------------------------------------------------------------------------------
-   Mobile Navigation Drawer (Kéo ra khi bấm Logo trên điện thoại)
-   CHỈ chứa đúng 5 chức năng theo ảnh người dùng cung cấp
+   Mobile Navigation Drawer (Kéo ra khi bấm Logo hoặc Hamburger trên điện thoại)
+   CHỈ chứa đúng 5 chức năng theo thiết kế:
+   🏠 Trang Chủ, 📄 Tủ Truyện Cộng Đồng, 🖋️ Studio Sáng Tác, 💲 Bảng Giá, ⚡ Tính Năng
    ------------------------------------------------------------------------------ */
-.brand-logo-wrapper {
-  position: relative;
-  display: inline-flex;
+
+/* 1. Header Brand Group & Mobile Hamburger Trigger */
+.brand-header-group {
+  display: flex;
   align-items: center;
+  gap: 8px;
 }
 
-.mobile-menu-indicator {
+.mobile-nav-toggle-btn {
   display: none;
-  position: absolute;
-  bottom: -4px;
-  right: -6px;
-  background: var(--accent-gold);
-  color: #070a12;
-  font-size: 0.72rem;
-  font-weight: 900;
-  line-height: 1;
-  padding: 2px 4px;
-  border-radius: 4px;
-  box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
-  border: 1px solid #070a12;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  flex-shrink: 0;
 }
 
+.mobile-nav-toggle-btn:hover,
+.mobile-nav-toggle-btn:active {
+  background: rgba(234, 179, 8, 0.15);
+  box-shadow: 0 0 14px rgba(234, 179, 8, 0.35);
+  transform: scale(1.04);
+}
+
+/* 2. Desktop Rules: KHÔNG BAO GIỜ hiển thị Drawer trên Desktop */
+@media (min-width: 769px) {
+  .mobile-nav-drawer,
+  .drawer-backdrop-overlay,
+  .mobile-nav-toggle-btn {
+    display: none !important;
+  }
+}
+
+/* 3. Mobile Navigation Drawer Container */
 .mobile-nav-drawer {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 270px;
-  max-width: 82vw;
-  background: rgba(10, 15, 28, 0.98);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid rgba(234, 179, 8, 0.35);
-  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.85);
-  z-index: 2200;
+  width: 300px;
+  max-width: 84vw;
+  height: 100vh;
+  height: 100dvh;
+  background: linear-gradient(180deg, rgba(11, 16, 30, 0.98) 0%, rgba(6, 9, 18, 0.99) 100%);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-right: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: 16px 0 48px rgba(0, 0, 0, 0.92), 0 0 28px rgba(234, 179, 8, 0.1);
+  z-index: 9999;
   transform: translateX(-105%);
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
   display: flex;
   flex-direction: column;
-  padding: 18px 14px;
+  padding: 20px 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-nav-drawer.open {
   transform: translateX(0);
 }
 
+/* 4. Backdrop Overlay */
 .drawer-backdrop-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 2150;
+  background: rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9998;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.28s ease;
 }
 
 .drawer-backdrop-overlay.active {
@@ -2097,26 +2122,29 @@ html, body {
   pointer-events: auto;
 }
 
+/* 5. Drawer Header Identity Bar */
 .drawer-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  margin-bottom: 18px;
 }
 
 .drawer-brand-identity {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .drawer-logo-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--accent-gold);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(234, 179, 8, 0.5);
+  box-shadow: 0 0 16px rgba(234, 179, 8, 0.3);
+  object-fit: cover;
 }
 
 .drawer-brand-col {
@@ -2126,26 +2154,31 @@ html, body {
 
 .drawer-title {
   font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 1.15rem;
-  letter-spacing: 0.05em;
-  color: #fff;
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+  background: linear-gradient(180deg, #ffffff 15%, #fde047 60%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.4));
 }
 
 .drawer-subtitle {
   font-size: 0.65rem;
-  color: var(--accent-gold);
+  color: var(--accent-cyan);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .drawer-close-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
   font-size: 1.1rem;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -2154,56 +2187,134 @@ html, body {
   transition: all 0.2s ease;
 }
 
+.drawer-close-btn:hover,
 .drawer-close-btn:active {
-  background: rgba(239, 68, 68, 0.3);
+  background: rgba(244, 63, 94, 0.2);
+  border-color: rgba(244, 63, 94, 0.4);
+  color: #fb7185;
+  transform: rotate(90deg);
 }
 
+/* 6. Drawer Navigation Menu: 5 Core Items */
 .drawer-nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
 }
 
 .drawer-nav-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  color: var(--text-main);
-  font-size: 0.95rem;
+  gap: 14px;
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.drawer-nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-gold);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .drawer-nav-link:hover,
 .drawer-nav-link:active {
-  background: rgba(234, 179, 8, 0.12);
+  background: rgba(234, 179, 8, 0.1);
   border-color: rgba(234, 179, 8, 0.3);
-  color: var(--accent-gold);
+  color: #fde047;
+  transform: translateX(4px);
 }
 
 .drawer-nav-link.active {
-  background: rgba(234, 179, 8, 0.18);
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.18) 0%, rgba(234, 179, 8, 0.04) 100%);
+  border-color: rgba(234, 179, 8, 0.55);
+  color: #fde047;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(234, 179, 8, 0.1);
+}
+
+.drawer-nav-link.active::before {
+  opacity: 1;
 }
 
 .drawer-item-icon {
-  font-size: 1.2rem;
-  width: 24px;
+  font-size: 1.25rem;
+  width: 26px;
+  height: 26px;
   display: inline-flex;
+  align-items: center;
   justify-content: center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 .drawer-item-label {
   flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.drawer-item-arrow {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.drawer-nav-link:hover .drawer-item-arrow,
+.drawer-nav-link.active .drawer-item-arrow {
+  color: var(--accent-gold);
+  transform: translateX(3px);
+}
+
+/* 7. Drawer Footer Status Card */
+.drawer-footer-card {
+  margin-top: auto;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.drawer-footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+.drawer-footer-badge .badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 8px #10b981;
+}
+
+.drawer-footer-note {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 4px;
 }
 
 /* ------------------------------------------------------------------------------
@@ -2246,9 +2357,7 @@ html, body {
    Breakpoints: 768px and below (Smartphones Standard & Portrait)
    ------------------------------------------------------------------------------ */
 @media (max-width: 768px) {
-  /* Header adjustments: Hide desktop nav row, open Drawer via Logo */
-
-  /* Header adjustments: Hide desktop nav row */
+  /* Header adjustments: Hide desktop nav row, show mobile hamburger trigger */
   .app-header {
     height: 60px;
     min-height: 60px;
@@ -2257,7 +2366,7 @@ html, body {
 
   .header-container {
     height: 100%;
-    padding: 0 14px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2266,6 +2375,23 @@ html, body {
 
   .app-nav-menu {
     display: none !important;
+  }
+
+  .mobile-nav-toggle-btn {
+    display: inline-flex !important;
+  }
+
+  .brand-header-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .logo-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .logo-title {

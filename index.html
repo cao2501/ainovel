@@ -36,8 +36,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="styles/editor.css">
+  <link rel="stylesheet" href="styles/main.css?v=2.2.2">
+  <link rel="stylesheet" href="styles/editor.css?v=2.2.2">
   <!-- Supabase Client JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -46,17 +46,23 @@
   <!-- Global Commercial Navigation Bar -->
   <header class="app-header">
     <div class="header-container">
-      <!-- Brand Logo (Nhấn vào trên mobile để mở Navigation Drawer) -->
-      <a class="logo-brand" id="brandHomeLink" title="Menu Chức Năng Aitory" href="javascript:void(0)">
-        <div class="brand-logo-wrapper">
+      <!-- Brand Logo & Mobile Drawer Trigger -->
+      <div class="brand-header-group">
+        <button class="mobile-nav-toggle-btn" id="btnOpenMobileNav" title="Mở menu điều hướng" aria-label="Mở menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <a class="logo-brand" id="brandHomeLink" title="Về Trang Chủ Aitory" href="#home">
           <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
-          <span class="mobile-menu-indicator" title="Mở menu">☰</span>
-        </div>
-        <div class="brand-text-col">
-          <div class="logo-title">AITORY</div>
-          <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
-        </div>
-      </a>
+          <div class="brand-text-col">
+            <div class="logo-title">AITORY</div>
+            <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
+          </div>
+        </a>
+      </div>
 
       <!-- Center Navigation Links -->
       <nav class="app-nav-menu" aria-label="Điều hướng chính">
@@ -127,48 +133,6 @@
       </div>
     </div>
   </header>
-
-  <!-- ============================================================================== -->
-  <!-- MOBILE NAVIGATION DRAWER (Mở ra khi chạm vào Logo trên điện thoại) -->
-  <!-- CHỈ chứa đúng 5 chức năng theo yêu cầu người dùng -->
-  <!-- ============================================================================== -->
-  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Menu chức năng mobile">
-    <div class="drawer-top-bar">
-      <div class="drawer-brand-identity">
-        <img src="assets/logo.jpg" alt="Aitory Logo" class="drawer-logo-img" width="36" height="36">
-        <div class="drawer-brand-col">
-          <span class="drawer-title">AITORY</span>
-          <span class="drawer-subtitle">NOVEL STUDIO</span>
-        </div>
-      </div>
-      <button class="drawer-close-btn" id="btnCloseNavDrawer" title="Đóng menu">✕</button>
-    </div>
-
-    <!-- 5 Chức Năng Cốt Lõi Duy Nhất -->
-    <nav class="drawer-nav-menu">
-      <button class="drawer-nav-link active" data-view="home" id="drawerBtnHome">
-        <span class="drawer-item-icon">🏠</span>
-        <span class="drawer-item-label">Trang Chủ</span>
-      </button>
-      <button class="drawer-nav-link" data-view="library" id="drawerBtnLibrary">
-        <span class="drawer-item-icon">📄</span>
-        <span class="drawer-item-label">Tủ Truyện Cộng Đồng</span>
-      </button>
-      <button class="drawer-nav-link" data-view="studio" id="drawerBtnStudio">
-        <span class="drawer-item-icon">🖋️</span>
-        <span class="drawer-item-label">Studio Sáng Tác</span>
-      </button>
-      <button class="drawer-nav-link" data-view="pricing" id="drawerBtnPricing">
-        <span class="drawer-item-icon">💲</span>
-        <span class="drawer-item-label">Bảng Giá</span>
-      </button>
-      <button class="drawer-nav-link" data-view="features" id="drawerBtnFeatures">
-        <span class="drawer-item-icon">⚡</span>
-        <span class="drawer-item-label">Tính Năng</span>
-      </button>
-    </nav>
-  </aside>
-  <div class="drawer-backdrop-overlay" id="mobileNavBackdrop"></div>
 
   <!-- ============================================================================== -->
   <!-- 1. VIEW HOME: GLOBAL COMMERCIAL NOVEL LANDING PAGE -->
@@ -1630,10 +1594,65 @@ Nhấn "Đánh Giá Ngay" để Editor Agent phân tích chi tiết từng hạt
     </div>
   </div>
 
+  <!-- ============================================================================== -->
+  <!-- MOBILE NAVIGATION DRAWER (CHỈ hiển thị trên mobile khi người dùng chạm mở menu) -->
+  <!-- CHỈ chứa đúng 5 chức năng cốt lõi theo yêu cầu -->
+  <!-- ============================================================================== -->
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Menu chức năng di động">
+    <div class="drawer-top-bar">
+      <div class="drawer-brand-identity">
+        <img src="assets/logo.jpg" alt="Aitory Logo" class="drawer-logo-img" width="40" height="40">
+        <div class="drawer-brand-col">
+          <span class="drawer-title">AITORY</span>
+          <span class="drawer-subtitle">NOVEL STUDIO</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="btnCloseNavDrawer" title="Đóng menu" aria-label="Đóng menu">✕</button>
+    </div>
+
+    <!-- 5 Chức Năng Cốt Lõi Duy Nhất -->
+    <nav class="drawer-nav-menu">
+      <button class="drawer-nav-link active" data-view="home" id="drawerBtnHome">
+        <span class="drawer-item-icon">🏠</span>
+        <span class="drawer-item-label">Trang Chủ</span>
+        <span class="drawer-item-arrow">›</span>
+      </button>
+      <button class="drawer-nav-link" data-view="library" id="drawerBtnLibrary">
+        <span class="drawer-item-icon">📄</span>
+        <span class="drawer-item-label">Tủ Truyện Cộng Đồng</span>
+        <span class="drawer-item-arrow">›</span>
+      </button>
+      <button class="drawer-nav-link" data-view="studio" id="drawerBtnStudio">
+        <span class="drawer-item-icon">🖋️</span>
+        <span class="drawer-item-label">Studio Sáng Tác</span>
+        <span class="drawer-item-arrow">›</span>
+      </button>
+      <button class="drawer-nav-link" data-view="pricing" id="drawerBtnPricing">
+        <span class="drawer-item-icon">💲</span>
+        <span class="drawer-item-label">Bảng Giá</span>
+        <span class="drawer-item-arrow">›</span>
+      </button>
+      <button class="drawer-nav-link" data-view="features" id="drawerBtnFeatures">
+        <span class="drawer-item-icon">⚡</span>
+        <span class="drawer-item-label">Tính Năng</span>
+        <span class="drawer-item-arrow">›</span>
+      </button>
+    </nav>
+
+    <div class="drawer-footer-card">
+      <div class="drawer-footer-badge">
+        <span class="badge-dot"></span>
+        <span>Aitory SaaS v2.0 Pro</span>
+      </div>
+      <p class="drawer-footer-note">Hệ Thống Sáng Tác 5 AI Agents</p>
+    </div>
+  </aside>
+  <div class="drawer-backdrop-overlay" id="mobileNavBackdrop"></div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Scripts -->
-  <script type="module" src="scripts/ui/app.js"></script>
+  <script type="module" src="scripts/ui/app.js?v=2.2.2"></script>
 </body>
 </html>
