@@ -573,10 +573,16 @@ class Application {
       });
     });
 
-    // Brand logo: Click on mobile (<= 768px) opens Mobile Drawer; click on desktop goes home
+    // Dedicated Mobile Hamburger button: opens drawer
+    document.getElementById('btnOpenMobileNav')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.toggleMobileNavDrawer();
+    });
+
+    // Brand logo: Click on responsive view (<= 1180px) opens Mobile Drawer; click on full desktop goes home
     document.getElementById('brandHomeLink')?.addEventListener('click', (e) => {
       e.preventDefault();
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1180) {
         this.toggleMobileNavDrawer();
       } else {
         this.switchView('home');
