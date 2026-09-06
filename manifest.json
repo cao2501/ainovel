@@ -1,0 +1,25 @@
+{
+  "name": "Aitory — Nền Tảng Sáng Tác Tiểu Thuyết Đa Agent Toàn Cầu",
+  "short_name": "Aitory",
+  "description": "Nền tảng thương mại biến ý tưởng sơ khai thành trường thiên tiểu thuyết triệu chữ với phong cách Á Đông thuần khiết.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#070a12",
+  "theme_color": "#070a12",
+  "orientation": "portrait-primary",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

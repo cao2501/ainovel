@@ -81,6 +81,31 @@ body {
   background: #475569;
 }
 
+/* Custom Focus Indicators (Front-End Checklist: Accessibility) */
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* Accessible Skip to Content Link (Front-End Checklist: Accessibility) */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--accent-gold);
+  color: #070a12;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  z-index: 10000;
+  transition: top 0.2s ease;
+  text-decoration: none;
+}
+
+.skip-to-content:focus {
+  top: 16px;
+}
+
 /* Typography Helpers */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
@@ -2036,41 +2061,10 @@ html, body {
    🏠 Trang Chủ, 📄 Tủ Truyện Cộng Đồng, 🖋️ Studio Sáng Tác, 💲 Bảng Giá, ⚡ Tính Năng
    ------------------------------------------------------------------------------ */
 
-/* 1. Header Brand Group & Mobile Hamburger Trigger */
-.brand-header-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mobile-nav-toggle-btn {
-  display: none;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(234, 179, 8, 0.4);
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-gold);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.mobile-nav-toggle-btn:hover,
-.mobile-nav-toggle-btn:active {
-  background: rgba(234, 179, 8, 0.15);
-  box-shadow: 0 0 14px rgba(234, 179, 8, 0.35);
-  transform: scale(1.04);
-}
-
-/* 2. Desktop Rules: KHÔNG BAO GIỜ hiển thị Drawer trên Desktop */
+/* 1. Desktop Rules: KHÔNG BAO GIỜ hiển thị Drawer trên Desktop */
 @media (min-width: 769px) {
   .mobile-nav-drawer,
-  .drawer-backdrop-overlay,
-  .mobile-nav-toggle-btn {
+  .drawer-backdrop-overlay {
     display: none !important;
   }
 }
@@ -2366,7 +2360,7 @@ html, body {
 
   .header-container {
     height: 100%;
-    padding: 0 10px;
+    padding: 0 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2377,21 +2371,10 @@ html, body {
     display: none !important;
   }
 
-  .mobile-nav-toggle-btn {
-    display: inline-flex !important;
-  }
-
-  .brand-header-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
   .logo-brand {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   .logo-title {
@@ -2399,7 +2382,11 @@ html, body {
   }
 
   .logo-subtitle {
-    display: none;
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent-cyan);
   }
 
   .brand-logo-img {
@@ -2767,4 +2754,50 @@ html, body {
   }
 }
 
+/* ------------------------------------------------------------------------------
+   Front-End Checklist: Accessibility - Prefers Reduced Motion
+   ------------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
+/* ------------------------------------------------------------------------------
+   Front-End Checklist: Print Stylesheet
+   ------------------------------------------------------------------------------ */
+@media print {
+  .app-header,
+  .mobile-nav-drawer,
+  .drawer-backdrop-overlay,
+  .toast-container,
+  .modal,
+  .modal-backdrop,
+  .studio-sidebar-left,
+  .studio-sidebar-right,
+  .studio-sub-header,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  .app-view {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}

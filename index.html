@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" dir="ltr">
 <head>
   <!-- Front-End Checklist: Character Encoding & Viewport -->
   <meta charset="UTF-8">
@@ -27,42 +27,37 @@
   <meta name="twitter:description" content="Biến ý tưởng sơ khai thành trường thiên tiểu thuyết triệu chữ với phong cách văn học Á Đông thuần khiết.">
   <meta name="twitter:image" content="https://ainovel.id.vn/assets/hero-banner.jpg">
 
-  <!-- Front-End Checklist: Favicons & Icons -->
+  <!-- Front-End Checklist: Favicons, App Icons & Manifest -->
   <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
   <link rel="apple-touch-icon" href="assets/logo.jpg">
+  <link rel="manifest" href="manifest.json">
 
   <!-- Google Fonts: Cinzel (Epic/Novel), Plus Jakarta Sans (Modern UI), Lora (Reading Serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles/main.css?v=2.2.2">
-  <link rel="stylesheet" href="styles/editor.css?v=2.2.2">
+  <link rel="stylesheet" href="styles/main.css?v=2.2.3">
+  <link rel="stylesheet" href="styles/editor.css?v=2.2.3">
   <!-- Supabase Client JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
+  <!-- Front-End Checklist: Accessible Skip-to-Content Link -->
+  <a href="#viewHome" class="skip-to-content">Chuyển đến nội dung chính</a>
+
   <!-- Global Commercial Navigation Bar -->
   <header class="app-header">
     <div class="header-container">
-      <!-- Brand Logo & Mobile Drawer Trigger -->
-      <div class="brand-header-group">
-        <button class="mobile-nav-toggle-btn" id="btnOpenMobileNav" title="Mở menu điều hướng" aria-label="Mở menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-        <a class="logo-brand" id="brandHomeLink" title="Về Trang Chủ Aitory" href="#home">
-          <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
-          <div class="brand-text-col">
-            <div class="logo-title">AITORY</div>
-            <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
-          </div>
-        </a>
-      </div>
+      <!-- Brand Logo -->
+      <a class="logo-brand" id="brandHomeLink" title="Về Trang Chủ Aitory" href="#home">
+        <img src="assets/logo.jpg" alt="Aitory Logo" class="brand-logo-img" width="44" height="44">
+        <div class="brand-text-col">
+          <div class="logo-title">AITORY</div>
+          <span class="logo-subtitle">GLOBAL NOVEL SAAS</span>
+        </div>
+      </a>
 
       <!-- Center Navigation Links -->
       <nav class="app-nav-menu" aria-label="Điều hướng chính">

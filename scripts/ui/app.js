@@ -573,12 +573,6 @@ class Application {
       });
     });
 
-    // Dedicated Mobile Hamburger button: opens drawer
-    document.getElementById('btnOpenMobileNav')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.toggleMobileNavDrawer();
-    });
-
     // Brand logo: Click on mobile (<= 768px) opens Mobile Drawer; click on desktop goes home
     document.getElementById('brandHomeLink')?.addEventListener('click', (e) => {
       e.preventDefault();
